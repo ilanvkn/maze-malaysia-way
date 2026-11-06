@@ -1,0 +1,78 @@
+{
+  "database_sha256": "032c24ae6e8c01b47d81181183e645efcfebe699f0c48f3b094bd27caf6518da",
+  "metadata": {
+    "source_sha256": "d3036a09bdad1bcb2b90054dce5b84b9a9d957134bfdd7806cd5bf98e06dfb48",
+    "policy": "conservative motorcar; no conditional/dimensional/private/destination/barrier ways; via-way restrictions conservatively block entry approaches; missing entry topology excludes from way; other unsupported restrictions exclude member ways; node-via no/only restrictions retained",
+    "limitations": "not active navigation; no lane guidance or traffic; nearest junction snap; defaults estimate time; conservative exclusions can disconnect legitimate roads",
+    "counts": {
+      "unsupported_restriction_ways_excluded": 3674,
+      "other_vehicle_restrictions_skipped": 540,
+      "included_ways": 1546812,
+      "barrier_ways_excluded": 43839,
+      "unknown_oneway_excluded": 8,
+      "via_way_entry_approaches_blocked": 27312,
+      "missing_via_way_from_ways_excluded": 132,
+      "ambiguous_only_turn_approaches_blocked": 1
+    },
+    "grid": {
+      "component_kind": "directed strong",
+      "components": 60844,
+      "largest_component_node_counts": [
+        [
+          62,
+          1676000
+        ],
+        [
+          21863,
+          178935
+        ],
+        [
+          4137,
+          156250
+        ],
+        [
+          2195896,
+          46748
+        ],
+        [
+          3342,
+          37018
+        ],
+        [
+          3,
+          11612
+        ],
+        [
+          41297,
+          9463
+        ],
+        [
+          41054,
+          7864
+        ],
+        [
+          15700,
+          6650
+        ],
+        [
+          28762,
+          3681
+        ],
+        [
+          511248,
+          2279
+        ],
+        [
+          499182,
+          1919
+        ]
+      ],
+      "note": "Strong directed connectivity ignores turn-state restrictions and is not a legal-access guarantee."
+    },
+    "nodes": 2363706,
+    "edges": 5300250,
+    "turns": 172950
+  },
+  "tool_sha256": "fa2d4ae6acee26a0cf43860d123727b68f4b0f70cd5a99c54c1022ac54fbd0ee",
+  "measurement": "Host diagnostic; Android performance is measured separately"
+}

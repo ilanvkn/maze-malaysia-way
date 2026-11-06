@@ -1,0 +1,11 @@
+{
+  "engine": "GraphHopper",
+  "version": "10.2",
+  "artifact": "https://repo.maven.apache.org/maven2/com/graphhopper/graphhopper-web/10.2/graphhopper-web-10.2.jar",
+  "jar_sha256": "ead763749c395ea0cc45b3fd10092d6de84d62fb5cbaf7d416ba6cc142c5716c",
+  "upstream_sha1_matched": true,
+  "profile": "stock car.json; motorcar/motor_vehicle turn costs; U-turn penalty 60 s",
+  "preparation": "flexible A* bidirectional; CH/LM disabled",
+  "source_sha256": "d3036a09bdad1bcb2b90054dce5b84b9a9d957134bfdd7806cd5bf98e06dfb48",
+  "note": "An initial CH preparation was stopped before completion. The separate completed graph-flex import and server supply all comparison results."
+}

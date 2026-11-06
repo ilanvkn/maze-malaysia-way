@@ -1,0 +1,28 @@
+graphhopper:
+  datareader.file: malaysia-singapore-brunei.osm.pbf
+  graph.location: graph-cache
+  profiles:
+    - name: car
+      turn_costs:
+        vehicle_types: [motorcar, motor_vehicle]
+        u_turn_costs: 60
+      custom_model_files: [car.json]
+  profiles_ch: []
+  profiles_lm: []
+  import.osm.ignored_highways: footway,cycleway,path,pedestrian,steps,bridleway,construction,platform,raceway
+  graph.encoded_values: car_access, car_average_speed, osm_way_id
+server:
+  application_connectors:
+    - type: http
+      port: 8989
+      bind_host: 127.0.0.1
+  admin_connectors:
+    - type: http
+      port: 8990
+      bind_host: 127.0.0.1
+  request_log:
+    appenders: []
+logging:
+  level: INFO
+  appenders:
+    - type: console

@@ -1,0 +1,124 @@
+{
+  "route_mode": "CAREFUL",
+  "heuristic_weight": 1,
+  "route_scope": "kl",
+  "repeats": 2,
+  "pack": "Malaysia + Singapore/Brunei \u00b7 OSM 4 Nov 2026 \u00b7 revised road graph",
+  "diagnostics": {
+    "sqlite": "3.44.3",
+    "places": 470369,
+    "7-Eleven": 12369,
+    "\"7*\" AND \"Eleven*\"": 0,
+    "\"7*\" \"Eleven*\"": 1991
+  },
+  "search": [
+    {
+      "query": "7-Eleven",
+      "count": 20,
+      "elapsed_ms": 72,
+      "first": "7-Eleven"
+    },
+    {
+      "query": "entrance",
+      "count": 20,
+      "elapsed_ms": 46,
+      "first": "Entrance"
+    },
+    {
+      "query": "motorway exit",
+      "count": 20,
+      "elapsed_ms": 7,
+      "first": "motorway exit "
+    },
+    {
+      "query": "Kuching",
+      "count": 20,
+      "elapsed_ms": 4,
+      "first": "Kuching"
+    },
+    {
+      "query": "Kota Kinabalu",
+      "count": 20,
+      "elapsed_ms": 9,
+      "first": "Kota Kinabalu"
+    },
+    {
+      "query": "George Town",
+      "count": 20,
+      "elapsed_ms": 4,
+      "first": "George Town"
+    },
+    {
+      "query": "Shah Alam",
+      "count": 20,
+      "elapsed_ms": 11,
+      "first": "Shah Alam"
+    },
+    {
+      "query": "noSuchPlace934982",
+      "count": 0,
+      "elapsed_ms": 0,
+      "first": ""
+    }
+  ],
+  "nearby_access": [
+    {
+      "place": "Petronas Twin Towers",
+      "count": 7,
+      "first": "37 m from selected point \u00b7 entrance \u00b7 OSM node/1507338885 \u00b7 Entrance: main"
+    },
+    {
+      "place": "KL Sentral",
+      "count": 11,
+      "first": "42 m from selected point \u00b7 entrance \u00b7 OSM node/11925140813 \u00b7 Entrance: yes"
+    },
+    {
+      "place": "Vivacity Megamall",
+      "count": 0,
+      "first": "No mapped points"
+    }
+  ],
+  "styles": [
+    "day",
+    "night"
+  ],
+  "tiles": [
+    {
+      "place": "KL Sentral",
+      "bytes": 175851
+    },
+    {
+      "place": "George Town",
+      "bytes": 74231
+    },
+    {
+      "place": "Kuching Waterfront",
+      "bytes": 75174
+    },
+    {
+      "place": "Kota Kinabalu",
+      "bytes": 30392
+    }
+  ],
+  "routes": [
+    {
+      "run": 1,
+      "from": "KL Sentral",
+      "to": "Petronas Twin Towers",
+      "meters": 6336.672782685117,
+      "elapsed_ms": 1111,
+      "vertices": 387,
+      "steps": 21
+    },
+    {
+      "run": 2,
+      "from": "KL Sentral",
+      "to": "Petronas Twin Towers",
+      "meters": 6336.672782685117,
+      "elapsed_ms": 889,
+      "vertices": 387,
+      "steps": 21
+    }
+  ],
+  "passed": true
+}

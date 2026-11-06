@@ -18,4 +18,4 @@ Validate regional POI counts, missing-coverage behavior, turn restrictions, rout
 
 ## Retained maintainer pack
 
-See [docs/DATA-RELEASE.md](docs/DATA-RELEASE.md) for the exact release source timestamp, hashes and ODbL assets. `migrate-offline-grid.py INPUT OUTPUT RECEIPT` and `migrate-turn-kinds.py INPUT PLACES OUTPUT RECEIPT` preserve the historical grid/turn transformations for compatible older schemas; they are not steps to apply blindly to a current fresh build. The retained migrated graph is not asserted byte reproducible from the current builder.
+See [docs/DATA-RELEASE.md](docs/DATA-RELEASE.md) for the exact release source timestamp, hashes and ODbL assets. `migrate-offline-grid.py INPUT OUTPUT RECEIPT` and `migrate-turn-kinds.py INPUT PLACES OUTPUT RECEIPT` preserve the historical grid/turn transformations for compatible older schemas; they are not steps to apply blindly to a current fresh build. The historical 0.3.1/0.3.2 migrated graph is not asserted byte reproducible from the current builder. The revised 0.4.0 graph is a fresh build; use its new receipt and hash rather than applying historical migrations.

@@ -2,17 +2,21 @@
 
 ## Implemented now
 
-Maze builds a filtered OSM driving graph and runs bounded A* on-device. A search key includes junction, incoming way and previous junction so turn rules can distinguish approach and reversal. Directed strong-component pairing finds supported endpoint snaps within 350 m; it is not a legal-access guarantee. Via-way, conditional, dimensional, barrier/access ambiguities and ferries remain conservatively unsupported.
+Maze builds a filtered OSM driving graph and runs bounded A* on-device. A search key includes junction, incoming way and previous junction so turn rules can distinguish approach and reversal. Directed strong-component pairing finds supported endpoint snaps within 350 m; it is not a legal-access guarantee. Via-way sequences remain unsupported: their entry approaches are conservatively blocked while member roads remain usable from other approaches. Conditional, dimensional, barrier/access ambiguities and ferries remain conservatively unsupported.
 
-The isolated Kotlin `boundedAStar` core has two modes. **Quick** uses heuristic weight 8 and can return a longer route. **Careful** uses weight 1; if the heuristic is admissible and search completes, it minimizes stored estimated travel time on the filtered graph. It does not guarantee the real-world fastest route. Distance / 40 m/s is a lower-bound heuristic for the current builder, which caps speed at 130 km/h. If costs, speed caps or graph semantics change, revalidate that assumption.
+The isolated Kotlin `boundedAStar` core has two modes. **Quick** uses heuristic weight 4 and can return a longer route. **Careful** uses weight 1; if the heuristic is admissible and search completes, it minimizes stored estimated travel time on the filtered graph. It does not guarantee the real-world fastest route. Distance / 40 m/s is a lower-bound heuristic for the current builder, which caps speed at 130 km/h. If costs, speed caps or graph semantics change, revalidate that assumption.
 
 Short trips have a 15 s / 120,000 expansion budget; trips over 50 km straight-line have 45 s / 250,000. Discovery and queue size are bounded, cancellation is checked during expansion, and budget exhaustion is distinct from a disconnected graph. Careful mode can time out where Quick succeeds. The More sheet selects search effort; refresh a current route to apply the selection.
 
 Per-route bounded LRU caches reuse outgoing edges, node positions and turn-rule reads across incoming states. This removes duplicate SQLite work but is not a measured battery or nationwide latency improvement. Synthetic tests demonstrate optimal-vs-weighted behavior, turn-state separation, disconnected graphs, invalid costs, cancellation, time/state/discovery limits and cache eviction. Exact-device tests and benchmarks have their own scope.
 
-## First fix the known detours
+## Measured graph correction · 0.4.0
 
-A better A* cannot restore roads excluded during graph building or fix a bad endpoint snap. Keep the KL Sentral–KLCC detour as a failing quality example, not a success badge. Next compare Quick/Careful and a mature routing-engine baseline on identical source data, examine excluded connectors and turn rules, and measure endpoint snap distance alongside route cost. No straight-line replacement on failure.
+The KL Sentral–KLCC fixture fell from 14.86 km to 6.34 km in Quick and Careful host runs on the same OSM snapshot. The old builder erased every member road of an unsupported via-way restriction. The replacement retains those roads and blocks the unsupported entry approaches instead. It checks all shared nodes and does not assume relation-member order. It remains conservative rather than executing complete multi-way turn sequences.
+
+A pinned local GraphHopper 10.2 baseline uses the identical full PBF. It returns 7.63 km for the original KL points, but its stock car model snaps the tower into customer car-park access that Maze excludes. A separate request at Maze's junctions returns 5.70 km. These are different cost/access/snapping policies, not evidence that either distance is automatically fastest or legally accessible. [Reproduce the comparison and inspect all seven pairs](benchmarks/2026-11-routing/README.md).
+
+Nearest-segment snapping, full via-way state, clearer endpoint access and long-distance preprocessing remain next work. A better heuristic cannot recover excluded roads. Keep failing counterexamples and separate budget exhaustion from disconnection. No straight-line replacement on failure.
 
 Valhalla's [core](https://github.com/valhalla/valhalla) and [mobile integration](https://github.com/Rallista/valhalla-mobile) are candidates, not dependencies already integrated. Licensing, Android ABI/build size, extract preparation, restrictions, memory, cold-start and on-device results need a bounded comparison before migration. CH/MLD/hierarchical A* may improve long-distance queries but add preprocessing, update and turn-cost complexity; select them from evidence rather than a list of algorithm names.
 
