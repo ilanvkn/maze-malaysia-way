@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
                 Image(painterResource(R.drawable.maze_icon), "Maze", Modifier.size(56.dp))
                 Text("Selamat datang.", style = MaterialTheme.typography.labelLarge, color = colors.primary)
                 Text("Your Malaysia.\nOffline.", style = MaterialTheme.typography.headlineLarge)
-                Text("Places worth finding. A map you can carry. Get the Malaysia pack once, then search and preview journeys without a connection.")
+                Text("Download once. Find places, plan a drive and keep your map with you when the connection drops.")
                 Text("No sign-up. Location is optional.", style = MaterialTheme.typography.labelLarge, color = colors.primary)
                 state.message?.let { Text(it, Modifier.semantics { liveRegion = LiveRegionMode.Polite }, style = MaterialTheme.typography.bodySmall) }
                 if (state.packChecking) {
@@ -53,8 +53,8 @@ import androidx.compose.ui.unit.dp
                 } else {
                     Card(Modifier.fillMaxWidth()) {
                         Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                            Text("A little setup. A lot to explore.", style = MaterialTheme.typography.titleLarge)
-                            Text("1  Download the Malaysia ZIP · 646 MB\n2  Choose that ZIP below · keep it zipped\n3  Search, save a trip, try airplane mode")
+                            Text("Get the Malaysia pack", style = MaterialTheme.typography.titleLarge)
+                            Text("1  Download the Malaysia ZIP · 662 MB\n2  Choose that ZIP below · keep it zipped\n3  Search, save a trip, try airplane mode")
                             Text("Use Wi-Fi if you prefer. Allow at least 3 GB free while importing. The regional pack also includes Singapore and Brunei.", style = MaterialTheme.typography.bodySmall)
                             state.packError?.let { error ->
                                 Surface(color = colors.errorContainer, shape = MaterialTheme.shapes.medium) {

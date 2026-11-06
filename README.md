@@ -24,9 +24,9 @@ The current regional pack includes Peninsular Malaysia, Sabah and Sarawak, plus 
 
 **This is an early developer preview.** Routes can fail or take substantial detours. No active turn-by-turn navigation, live traffic, lane guidance, ferry routing or guaranteed fastest/legal-access claim. A mapped shop point is not a verified entrance. [Read the tested limits](docs/QUALITY.md) before relying on the preview.
 
-<p align="center"><img src="docs/assets/setup.png" alt="Maze native first-use screen with account-free Malaysia map download and ZIP import" width="270"> <img src="docs/assets/community.png" alt="Maze native dark community sheet with deliberate sharing and optional contribution" width="270"></p>
+<p align="center"><img src="docs/assets/map-day.png" alt="Maze day map with the corrected 6.3 km KL Sentral to KLCC road preview" width="270"> <img src="docs/assets/map-night.png" alt="Maze night map with the same route, A and B markers, and compact journey controls" width="270"></p>
 
-Actual 0.3.2 minified QA app screenshots, not mockups. The isolated QA identity exercises first use without replacing an existing installation or its trips. Screenshots do not certify full accessibility, physical GPS or route quality.
+Actual 0.4.0 publishable minified lab APK screenshots in airplane mode, not mockups. The revised cartography separates urban land from mapped parks and uses five road tiers. [Read the design contract](DESIGN.md) and [same-source routing comparison](docs/benchmarks/2026-11-routing/README.md). Screenshots do not certify field navigation or complete accessibility.
 
 ## Try it
 
@@ -34,12 +34,12 @@ Download the **developer-preview APK**, the matching **Malaysia offline pack ZIP
 
 1. Install the APK on your own non-production test device. Maze opens a guided setup screen; no account or GPS permission is needed.
 2. Keep the country ZIP intact. Allow at least 3 GB of free space for the ZIP, installed data and staging; more may be needed while updating.
-3. Open Maze → **Import Malaysia pack** → select the ZIP in Android's file picker.
+3. Open Maze → **Choose downloaded ZIP** → select the ZIP in Android's file picker.
 4. Try a search and route, then repeat in airplane mode. Offline operation starts **after** import.
 
 The app links directly to the matching ZIP, supports cancelling import, and explains file/storage failures. With a map ready, open **More → Community & sharing** to invite someone through the Android Sharesheet, find a first contribution, or review a mapped-place report on GitHub. The invitation contains no location or trip data. Posting on GitHub uses your own optional account; maps stay account-free.
 
-See [the product direction](docs/PRODUCT-DIRECTION.md) for the engineering, design, community and operations decisions. The 0.3.2 preview uses the same hash-pinned country pack as the 0.3.1 data release.
+See [the product direction](docs/PRODUCT-DIRECTION.md) for the engineering, design, community and operations decisions. The 0.4.0 preview requires the revised r2 country ZIP. The source OSM date remains 4 November; the road-graph transformation changed. Existing saved trips remain local and can contain older route geometry—refresh them with the new pack.
 
 The APK pins the three dataset hashes. Another pack version will be rejected rather than silently mixed. GPS can work without internet, but acquiring a fix indoors or after a cold start can be slow; approximate permission needs an available network location provider. [GPS behavior](docs/GPS.md).
 
@@ -55,7 +55,7 @@ python3 -B -m unittest discover -s tests -v
 
 The first command fetches and verifies all 256 reviewed glyph blocks. Builds download dependencies; offline **app use** is a different claim. Country databases are release assets, not Git blobs. To build and pin your own data release, follow [DATA.md](DATA.md). Build helpers, graph schema and packaging are open; no proprietary map dataset is included.
 
-CI checks build/JVM/lint/Python behavior. It does not by itself prove Android interaction, field GPS, battery life or national route correctness. The repository never auto-selects a connected device.
+CI checks build/JVM/lint/Python behavior and synthetic OSM restriction fixtures. It does not by itself prove Android interaction, field GPS, battery life or national route correctness. The repository never auto-selects a connected device.
 
 ## Work on Maze with an assistant
 
