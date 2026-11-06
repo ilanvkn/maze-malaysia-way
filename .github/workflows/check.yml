@@ -2,6 +2,9 @@ name: Android source checks
 on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
+concurrency:
+  group: maze-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   android:
     runs-on: ubuntu-latest
@@ -14,6 +17,23 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0" < /dev/null'
-      - run: ./gradlew --no-daemon :app:assembleLab :app:testLabUnitTest :app:lintLab
-      - run: python3 -B -m unittest discover -s tests -v
+      - name: Prepare Android SDK
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0" < /dev/null'
+      - name: Prepare hash-verified offline glyphs
+        run: python3 tools/fetch-offline-glyphs.py
+      - name: Build and check Android source
+        run: ./gradlew --no-daemon :app:assembleLab :app:testLabUnitTest :app:lintLab
+      - name: Verify the built offline payload
+        run: python3 tools/verify-offline-apk.py app/build/outputs/apk/lab/app-lab.apk
+      - name: Check local tools and failure cases
+        run: python3 -B -m unittest discover -s tests -v
+      - name: Retain test and lint reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: maze-check-reports
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            app/build/reports/lint-results-lab.*
+            app/build/test-results/testLabUnitTest/*.xml
