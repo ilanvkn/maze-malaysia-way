@@ -1,0 +1,1 @@
+<resources><style name="MazeThemeBase" parent="android:style/Theme.Material.Light.NoActionBar"><item name="android:fontFamily">sans</item><item name="android:windowLightStatusBar">true</item><item name="android:colorAccent">#0B715F</item></style><style name="MazeTheme" parent="MazeThemeBase"/></resources>
