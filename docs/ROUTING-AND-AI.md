@@ -36,3 +36,7 @@ Candidate improvements, in order:
 | Incident reports | Human-reviewed structured reports | Duplicate clustering or language parsing | Abuse/error rate, multilingual review, no automatic closures or route penalties from unverified text |
 
 No weights are bundled and no ML quality, traffic or fastest-route improvement has been measured. Proposed models must have compatible code/weight/data licenses, a small deployable footprint and a documented baseline they actually beat. Model-generated roads, entrances and traffic are never acceptable ground truth.
+
+## Malaysian traffic source review · 6 November 2026
+
+The official [data.gov.my API quickstart](https://developer.data.gov.my/quickstart) documents token-free, rate-limited public access and links realtime GTFS/GTFS-R/weather APIs; that alone is not evidence of a nationwide road-speed feed. The [LLM API landing page](https://api.llm.gov.my/) returned an under-maintenance page during review. The Ministry of Works [RTVM portal](https://rtvm.kkr.gov.my/) was identified as a road-traffic-volume source, but the direct fetch timed out; usable datasets, freshness and redistribution rights were not verified. These are research leads, not integrated feeds or a claim that no other source exists. Maze does not scrape proprietary Google/Waze/TomTom traffic or infer congestion from public-transport vehicle positions.
