@@ -43,9 +43,6 @@ import org.maplibre.android.module.http.HttpRequestUtil
 import org.maplibre.android.MapLibre
 import okhttp3.OkHttpClient
 
-private val Forest=Color(0xFF0B715F)
-private val Ink=Color(0xFF103C35)
-private val Warm=Color(0xFFF7FAF6)
 class MainActivity:ComponentActivity() {
     private var model:MazeViewModel?=null
     private val foregroundLocation by lazy { MazeForegroundLocation(this) }
@@ -57,7 +54,7 @@ class MainActivity:ComponentActivity() {
         super.onCreate(savedInstanceState);enableEdgeToEdge()
         MapLibre.getInstance(this)
         val dispatcher=okhttp3.Dispatcher().apply { maxRequests=4;maxRequestsPerHost=4 }
-        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().dispatcher(dispatcher).addNetworkInterceptor { chain -> chain.proceed(chain.request().newBuilder().header("User-Agent","MazeMalaysiaWay/0.3.2 (Android offline community preview)").build()) }.build())
+        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().dispatcher(dispatcher).addNetworkInterceptor { chain -> chain.proceed(chain.request().newBuilder().header("User-Agent","MazeMalaysiaWay/${BuildConfig.VERSION_NAME} (Android offline community preview)").build()) }.build())
         setContent {
             val vm:MazeViewModel=viewModel();model=vm
             MazeTheme(vm.state.appearance) { night -> SideEffect{androidx.core.view.WindowCompat.getInsetsController(window,window.decorView).apply{isAppearanceLightStatusBars=!night;isAppearanceLightNavigationBars=!night}};MazeScreen(vm,night,onImportPack={packPicker.launch(arrayOf("application/zip","application/octet-stream"))}) { locationPermissions.launch(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION)) } }
@@ -84,7 +81,7 @@ class MainActivity:ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class,ExperimentalLayoutApi::class)
 @Composable fun MazeScreen(model:MazeViewModel,night:Boolean,onImportPack:()->Unit,onLocation:()->Unit) {
  val s=model.state;val colors=MaterialTheme.colorScheme
- var sheet by rememberSaveable { mutableStateOf("") };var expanded by remember { mutableStateOf(true) };var explain by remember { mutableStateOf(false) }
+ var sheet by rememberSaveable { mutableStateOf("") };var expanded by remember { mutableStateOf(false) };var explain by remember { mutableStateOf(false) }
  var mapReady by remember { mutableStateOf(false) };var header by remember{mutableStateOf(0)};var panel by remember{mutableStateOf(0)};var panelWidth by remember{mutableStateOf(0)}
  val window=LocalWindowInfo.current.containerSize;val wide=window.width>window.height;val compactHeader=wide&&LocalDensity.current.fontScale>=1.5f;val maxPanel=with(LocalDensity.current){window.height.toDp()}*(if(wide).78f else .50f)
  val route=s.routes.getOrNull(s.selectedRoute);val uri=LocalUriHandler.current;val context=LocalContext.current
@@ -95,19 +92,28 @@ class MainActivity:ComponentActivity() {
  if(!s.packReady&&route==null)MazeWelcome(s,onDownload={openExternal(MAZE_PACK_DOWNLOAD)},onImport=onImportPack,onCancel=model::cancelPackImport,onSaved={sheet="saved"},onCommunity={sheet="community"})
  else Box(Modifier.fillMaxSize().background(colors.background)) {
   if(s.packReady)MazeMap(s,Modifier.fillMaxSize(),topInset=header+20,bottomInset=if(wide)40 else panel+20,rightInset=if(wide)panelWidth+20 else 40,styleUri=mapStyle){mapReady=it}
-  Surface(Modifier.align(Alignment.TopStart).onSizeChanged{header=it.height}.then(if(wide)Modifier.width(330.dp)else Modifier.fillMaxWidth()).statusBarsPadding().padding(12.dp),shape=RoundedCornerShape(24.dp),shadowElevation=5.dp) {
-   Column(Modifier.padding(horizontal=16.dp,vertical=8.dp)) {
-    Row(verticalAlignment=Alignment.CenterVertically) { Image(painterResource(R.drawable.maze_icon),"Maze",Modifier.size(32.dp));if(compactHeader)Spacer(Modifier.weight(1f))else Text("maze",Modifier.weight(1f).padding(start=10.dp),maxLines=1,overflow=TextOverflow.Ellipsis,fontSize=25.sp,fontWeight=FontWeight.Bold);TextButton(onClick={sheet="saved"}){Text("Saved")};TextButton(onClick={sheet="settings"}){Text("More")} }
-    TextButton(onClick={sheet="search"},modifier=Modifier.fillMaxWidth().heightIn(min=52.dp)) { Column(Modifier.weight(1f)) {Text("Where to?",style=MaterialTheme.typography.labelMedium);Text(s.destination.name,maxLines=1,overflow=TextOverflow.Ellipsis,fontWeight=FontWeight.SemiBold)};Text("Search") }
-    Text(if(s.packReady&&compactHeader)"Offline pack ready" else if(s.packReady)"OFFLINE · Malaysia regional pack" else s.packStatus,style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)
+  Surface(Modifier.align(Alignment.TopStart).then(if(wide)Modifier.width(330.dp)else Modifier.fillMaxWidth()).onSizeChanged{header=it.height}.statusBarsPadding().padding(12.dp),shape=RoundedCornerShape(20.dp),shadowElevation=3.dp,color=colors.surfaceContainerLowest) {
+   Column(Modifier.padding(horizontal=16.dp,vertical=4.dp)) {
+    Row(verticalAlignment=Alignment.CenterVertically) {
+     Image(painterResource(R.drawable.maze_icon),null,Modifier.size(28.dp))
+     if(compactHeader)Spacer(Modifier.weight(1f))else Column(Modifier.weight(1f).padding(start=8.dp)){Text("maze",fontSize=22.sp,fontWeight=FontWeight.Bold);if(!compactHeader)Text("MALAYSIA · OFFLINE",style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)}
+     TextButton(onClick={sheet="saved"}){Text("Saved")};TextButton(onClick={sheet="settings"}){Text("More")}
+    }
+    HorizontalDivider(color=colors.outlineVariant)
+    TextButton(onClick={sheet="search"},modifier=Modifier.fillMaxWidth().heightIn(min=56.dp),contentPadding=PaddingValues(vertical=8.dp)) {
+     Column(Modifier.weight(1f)){Text("Where to?",style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant);Text(s.destination.name,maxLines=1,overflow=TextOverflow.Ellipsis,style=MaterialTheme.typography.titleMedium,color=colors.onSurface)}
+     Icon(painterResource(R.drawable.ic_search),null,Modifier.size(20.dp));Spacer(Modifier.width(8.dp));Text("Search",style=MaterialTheme.typography.labelLarge)
+    }
     if(!s.packReady&&s.packProgress==null)TextButton(onClick=onImportPack){Text("Import Malaysia pack")}
     if(s.packProgress!=null&&!s.packReady)LinearProgressIndicator(progress={s.packProgress},modifier=Modifier.fillMaxWidth())
-    if(!s.online&&!compactHeader)Text(if(s.packReady)"Airplane-ready · on-device maps, search and routes" else if(s.packProgress!=null)"Offline pack preparing" else "Offline · import a map pack",style=MaterialTheme.typography.labelSmall)
    }
   }
-  Surface(Modifier.align(if(wide)Alignment.BottomEnd else Alignment.BottomCenter).then(if(wide)Modifier.width(370.dp)else Modifier.fillMaxWidth()).onSizeChanged{panel=it.height;panelWidth=it.width},shape=RoundedCornerShape(topStart=28.dp,topEnd=28.dp),shadowElevation=8.dp) {
+  if(!wide)SmallFloatingActionButton(onClick={explain=true},modifier=Modifier.align(Alignment.CenterEnd).padding(end=16.dp),containerColor=colors.surfaceContainerLowest,contentColor=colors.primary){Icon(painterResource(R.drawable.ic_locate),"Locate me")}
+  Surface(Modifier.align(if(wide)Alignment.BottomEnd else Alignment.BottomCenter).then(if(wide)Modifier.width(370.dp)else Modifier.fillMaxWidth()).padding(horizontal=12.dp).padding(bottom=8.dp).onSizeChanged{panel=it.height;panelWidth=it.width},shape=RoundedCornerShape(20.dp),shadowElevation=3.dp,color=colors.surfaceContainerLowest) {
    Column(Modifier.navigationBarsPadding().heightIn(max=maxPanel).verticalScroll(rememberScrollState()).padding(horizontal=20.dp,vertical=8.dp)) {
-    Row(verticalAlignment=Alignment.CenterVertically) { Column(Modifier.weight(1f)){Text(if(route==null)"YOUR JOURNEY" else if(s.savedPreview)"SAVED PREVIEW" else if(s.sample)"RECORDED SAMPLE" else "OFFLINE ROAD PREVIEW",style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant);Text(if(route==null)s.origin.name else "${routeMinutes(route.seconds)} min · ${routeDistanceLabel(route.meters)}",fontSize=22.sp,fontWeight=FontWeight.Bold)};TextButton(onClick={expanded=!expanded}){Text(if(expanded)"Less detail" else "Trip details")} }
+    Row(verticalAlignment=Alignment.CenterVertically) { Column(Modifier.weight(1f)){Text(if(route==null)"YOUR JOURNEY" else if(s.savedPreview)"SAVED PREVIEW" else if(s.sample)"RECORDED SAMPLE" else "DRIVING · OFFLINE",style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant);Text(if(route==null)s.origin.name else "${routeMinutes(route.seconds)} min · ${routeDistanceLabel(route.meters)}",fontSize=22.sp,fontWeight=FontWeight.Bold)};TextButton(onClick={expanded=!expanded}){Text(if(expanded)"Less detail" else "Trip details")} }
+    if(!expanded)Text("${s.origin.name} → ${s.destination.name}",style=MaterialTheme.typography.bodyMedium,maxLines=2,overflow=TextOverflow.Ellipsis,modifier=Modifier.padding(vertical=4.dp))
+    if(route!=null&&!expanded)Text("Road preview · no live traffic",style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)
     if(s.routeBusy){LinearProgressIndicator(Modifier.fillMaxWidth().padding(vertical=6.dp));Text("Long offline trips can take up to 45 seconds.",style=MaterialTheme.typography.bodySmall);TextButton(onClick=model::cancelRoute){Text("Cancel route")}}
     if(s.message!=null)Surface(color=colors.secondaryContainer,shape=RoundedCornerShape(12.dp),modifier=Modifier.padding(vertical=6.dp).semantics{liveRegion=LiveRegionMode.Polite}){Text(s.message,Modifier.padding(12.dp),style=MaterialTheme.typography.bodySmall)}
     if(expanded) {
@@ -122,7 +128,7 @@ class MainActivity:ComponentActivity() {
       Row {TextButton(onClick=model::saveTrip,enabled=!s.saving){Text(if(s.saving)"Saving…" else "Save trip")};TextButton(onClick=model::findRoutes,enabled=!s.routeBusy){Text("Refresh route")} }
      } else Text("A clearer way there. Choose your start and destination.",style=MaterialTheme.typography.bodyMedium)
     }
-    Button(onClick={if(route==null)model.findRoutes()else sheet="directions"},enabled=!s.routeBusy&&(s.packReady||route!=null),modifier=Modifier.fillMaxWidth().heightIn(min=52.dp).padding(vertical=4.dp),shape=RoundedCornerShape(16.dp)){Text(if(route!=null)"View road sequence" else if(s.routeBusy)"Finding routes…" else "Find road routes")}
+    Button(onClick={if(route==null)model.findRoutes()else sheet="directions"},enabled=!s.routeBusy&&(s.packReady||route!=null),modifier=Modifier.fillMaxWidth().heightIn(min=52.dp).padding(vertical=4.dp),shape=RoundedCornerShape(16.dp)){Text(if(route!=null)"Road sequence" else if(s.routeBusy)"Finding routes…" else "Find route")}
     Text(if(mapReady)"© OpenStreetMap contributors · ODbL 1.0 · Geofabrik" else "Loading basemap · saved directions remain available",style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)
    }
   }

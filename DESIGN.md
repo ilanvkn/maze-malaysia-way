@@ -1,0 +1,19 @@
+# Maze · the map gets the space
+
+Maze is an account-free Malaysian map, not a dashboard. Cartography is the main surface. The default view has one destination search and one compact journey card. Details, provenance, access points and community actions remain one deliberate step away. No invented activity counters, decorative graphs or motion backgrounds.
+
+## Visual contract
+
+Porcelain `#F7F8FC`, ink `#182239`, indigo `#354FD6`. Night uses ink surfaces, pale indigo actions and ice secondary accents. The route uses indigo with a white casing; a rust destination and indigo origin also differ by position and supporting text. Native system typography keeps Malaysian scripts and enlarged text dependable. Existing Maze M mark is retained in the new palette. No font download or new UI dependency.
+
+Surfaces are opaque, rounded 20 dp, with restrained elevation. Use 4/8 dp spacing and at least 48 dp interactive targets. Keep visible attribution. Default trip details are collapsed; loading, cancellation and errors remain visible. Wide layouts place the journey beside the map. Enlarged text can scroll the card and sheets. Do not shrink text to make it fit.
+
+## Cartography
+
+Original Shortbread styling: cool neutral city fabric, muted park green, ice water, subtle buildings from zoom 14. Local roads appear after major roads; five independent zoom-scaled road tiers have casings. Major-road labels outrank local places. Transit stations appear at 14, selected landmarks at 15, other mapped businesses at 17. Footpaths are dashed and do not imply driving access. No invented labels, roads, greenery, terrain or traffic.
+
+The regional tiles stop at zoom 14; higher zoom magnifies the existing geometry. Map and interface night palettes are separate and must both be checked on the emulator. A passing JSON check does not prove MapLibre rendered a route.
+
+## Review gates
+
+Inspect actual day/night map pixels, a visible corrected KL route, first use and the search/details flow. Test portrait and real landscape with enlarged text. Preserve all offline/privacy/error states. Record exact APK/data versions and limits in the qualification report. Emulator screenshots are not a claim of field navigation quality.

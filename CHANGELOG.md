@@ -1,5 +1,12 @@
 # Changes
 
+## 0.4.0 routing and cartography
+
+- Retained streets around unsupported multi-way turn restrictions, with conservative entry guards and synthetic regression fixtures in CI. New matching r2 pack; the OSM source date is unchanged.
+- Same-source GraphHopper comparison across seven public journeys. KL Sentral–KLCC drops from 14.86 km to 6.34 km in both Maze modes; policies and snap differences are recorded.
+- Original ink/porcelain/indigo interface, smaller default journey controls, road hierarchy and casings, selective labels, mapped green spaces, A/B markers and a direct location action.
+- Camera fitting includes place markers even when a road snap ends nearby. Account-free use, local saved trips and deliberate community contribution remain available.
+
 ## 0.3.2 product flow
 
 - Account-free setup screen with a direct matching-pack link, import progress, cancellation, storage preflight and actionable errors.

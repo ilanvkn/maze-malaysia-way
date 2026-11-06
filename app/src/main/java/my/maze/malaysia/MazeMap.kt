@@ -44,20 +44,21 @@ import org.maplibre.geojson.Point
         onDispose { lifecycle.removeObserver(observer);if(resumed)mapView.onPause();if(started)mapView.onStop();mapView.onDestroy() }
     }
     key(styleUri) { AndroidView(factory={mapView.apply { getMapAsync { m ->
-        map=m;m.uiSettings.isLogoEnabled=false
+        map=m;m.uiSettings.isLogoEnabled=false;m.uiSettings.isAttributionEnabled=false
         m.cameraPosition=CameraPosition.Builder().target(LatLng(3.1465,101.699)).zoom(12.5).build()
         m.setStyle(Style.Builder().fromUri(styleUri)) { style ->
             style.addSource(GeoJsonSource("maze-road"))
             val lastRoad=style.layers.indexOfLast{it is LineLayer || it is FillLayer}
             val firstLabel=style.layers.drop(lastRoad+1).firstOrNull{it is SymbolLayer}?.id
             val casing=LineLayer("maze-road-casing","maze-road").withProperties(lineColor("#FFFFFF"),lineWidth(10f),lineCap("round"),lineJoin("round"))
-            val line=LineLayer("maze-road-line","maze-road").withProperties(lineColor("#0B715F"),lineWidth(6f),lineCap("round"),lineJoin("round"))
+            val line=LineLayer("maze-road-line","maze-road").withProperties(lineColor("#354FD6"),lineWidth(6f),lineCap("round"),lineJoin("round"))
             if(firstLabel!=null){style.addLayerBelow(casing,firstLabel);style.addLayerBelow(line,firstLabel)}else{style.addLayer(casing);style.addLayer(line)}
-            style.addSource(GeoJsonSource("maze-access"));style.addLayer(CircleLayer("maze-access-layer","maze-access").withProperties(circleColor("#E6B75D"),circleRadius(4f),circleStrokeColor("#FFFFFF"),circleStrokeWidth(1.5f)))
+            style.addSource(GeoJsonSource("maze-access"));style.addLayer(CircleLayer("maze-access-layer","maze-access").withProperties(circleColor("#6F819D"),circleRadius(4f),circleStrokeColor("#FFFFFF"),circleStrokeWidth(1.5f)))
             style.addSource(GeoJsonSource("maze-points"))
-            style.addLayer(CircleLayer("maze-points-layer","maze-points").withProperties(circleColor("#A45A13"),circleRadius(7f),circleStrokeColor("#FFFFFF"),circleStrokeWidth(3f)))
+            style.addLayer(CircleLayer("maze-points-layer","maze-points").withProperties(circleColor("#B65330"),circleRadius(9f),circleStrokeColor("#FFFFFF"),circleStrokeWidth(2f)))
             style.addSource(GeoJsonSource("maze-origin"))
-            style.addLayer(CircleLayer("maze-origin-layer","maze-origin").withProperties(circleColor("#0B715F"),circleRadius(7f),circleStrokeColor("#FFFFFF"),circleStrokeWidth(3f)))
+            style.addLayer(CircleLayer("maze-origin-layer","maze-origin").withProperties(circleColor("#354FD6"),circleRadius(9f),circleStrokeColor("#FFFFFF"),circleStrokeWidth(2f)))
+            for((source,label) in listOf("maze-origin" to "A","maze-points" to "B"))style.addLayer(SymbolLayer("$source-label",source).withProperties(textField(label),textSize(11f),textFont(arrayOf("Noto Sans Regular")),textColor("#FFFFFF"),textAllowOverlap(true),textIgnorePlacement(true)))
             ready=true;onReady(true)
         }
     } }},modifier=modifier) }
@@ -70,10 +71,10 @@ import org.maplibre.geojson.Point
         style.getSourceAs<GeoJsonSource>("maze-road")?.setGeoJson(if(coordinates.size>=2)FeatureCollection.fromFeature(Feature.fromGeometry(LineString.fromLngLats(coordinates))) else FeatureCollection.fromFeatures(emptyArray<Feature>()))
         style.getSourceAs<GeoJsonSource>("maze-points")?.setGeoJson(FeatureCollection.fromFeatures(listOf(state.destination).map { Feature.fromGeometry(Point.fromLngLat(it.point.lon,it.point.lat)) }))
         style.getSourceAs<GeoJsonSource>("maze-origin")?.setGeoJson(Feature.fromGeometry(Point.fromLngLat(state.origin.point.lon,state.origin.point.lat)))
-        val points=route?.geometry ?: listOf(state.origin.point,state.destination.point)
+        val points=route?.geometry.orEmpty()+listOf(state.origin.point,state.destination.point)
         if(points.distinct().size>=2) {
             val bounds=LatLngBounds.Builder().includes(points.map{LatLng(it.lat,it.lon)}).build()
-            m.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,40,topInset.coerceAtLeast(40),rightInset.coerceAtLeast(40),bottomInset.coerceAtLeast(40)))
+            m.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,64,topInset.coerceAtLeast(64),rightInset.coerceAtLeast(64),bottomInset.coerceAtLeast(64)))
         }
     }
 }
