@@ -67,4 +67,15 @@ class MazeAStarTest {
         }
     }
 
+    @Test fun greedierPreviewCanExhaustBudgetInAHeuristicTrap() {
+        // Synthetic dead ends look close to the goal; a valid route first moves away.
+        fun run(weight:Double)=boundedAStar(0,{it==2},{n->when(n){
+            0->listOf(SearchArc(1,1.0,"outward"))+(3..22).map{SearchArc(it,500.0,"dead end")}
+            1->listOf(SearchArc(2,100.0,"goal"))
+            else->emptyList()
+        }},{if(it==1)100.0 else 0.0},weight,10,100,100,{0})
+        assertEquals(101.0,run(4.0)!!.seconds,0.0)
+        assertThrows(SearchBudgetExceeded::class.java){run(8.0)}
+    }
+
 }

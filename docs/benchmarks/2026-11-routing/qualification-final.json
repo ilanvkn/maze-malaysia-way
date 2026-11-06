@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "route_computations": 16,
+  "installed_apk_sha256": "fe991405f4c84d9c235fe25059b696a1a7146452ad3ea1a1f835b1646912bb7d",
+  "suites": [
+    "quick-all",
+    "careful-city",
+    "quick-kl-first-second",
+    "careful-kl-first-second"
+  ],
+  "timing_scope": "First and immediate second KL request after force-stop per mode; OS storage cache was warmed by import, not cold-storage measurements"
+}

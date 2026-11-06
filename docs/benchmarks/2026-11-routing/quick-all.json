@@ -1,0 +1,169 @@
+{
+  "route_mode": "QUICK",
+  "heuristic_weight": 4,
+  "route_scope": "all",
+  "repeats": 1,
+  "pack": "Malaysia + Singapore/Brunei \u00b7 OSM 4 Nov 2026 \u00b7 revised road graph",
+  "diagnostics": {
+    "sqlite": "3.44.3",
+    "places": 470369,
+    "7-Eleven": 12369,
+    "\"7*\" AND \"Eleven*\"": 0,
+    "\"7*\" \"Eleven*\"": 1991
+  },
+  "search": [
+    {
+      "query": "7-Eleven",
+      "count": 20,
+      "elapsed_ms": 274,
+      "first": "7-Eleven"
+    },
+    {
+      "query": "entrance",
+      "count": 20,
+      "elapsed_ms": 192,
+      "first": "Entrance"
+    },
+    {
+      "query": "motorway exit",
+      "count": 20,
+      "elapsed_ms": 16,
+      "first": "motorway exit "
+    },
+    {
+      "query": "Kuching",
+      "count": 20,
+      "elapsed_ms": 42,
+      "first": "Kuching"
+    },
+    {
+      "query": "Kota Kinabalu",
+      "count": 20,
+      "elapsed_ms": 35,
+      "first": "Kota Kinabalu"
+    },
+    {
+      "query": "George Town",
+      "count": 20,
+      "elapsed_ms": 31,
+      "first": "George Town"
+    },
+    {
+      "query": "Shah Alam",
+      "count": 20,
+      "elapsed_ms": 49,
+      "first": "Shah Alam"
+    },
+    {
+      "query": "noSuchPlace934982",
+      "count": 0,
+      "elapsed_ms": 1,
+      "first": ""
+    }
+  ],
+  "nearby_access": [
+    {
+      "place": "Petronas Twin Towers",
+      "count": 7,
+      "first": "37 m from selected point \u00b7 entrance \u00b7 OSM node/1507338885 \u00b7 Entrance: main"
+    },
+    {
+      "place": "KL Sentral",
+      "count": 11,
+      "first": "42 m from selected point \u00b7 entrance \u00b7 OSM node/11925140813 \u00b7 Entrance: yes"
+    },
+    {
+      "place": "Vivacity Megamall",
+      "count": 0,
+      "first": "No mapped points"
+    }
+  ],
+  "styles": [
+    "day",
+    "night"
+  ],
+  "tiles": [
+    {
+      "place": "KL Sentral",
+      "bytes": 175851
+    },
+    {
+      "place": "George Town",
+      "bytes": 74231
+    },
+    {
+      "place": "Kuching Waterfront",
+      "bytes": 75174
+    },
+    {
+      "place": "Kota Kinabalu",
+      "bytes": 30392
+    }
+  ],
+  "routes": [
+    {
+      "run": 1,
+      "from": "KL Sentral",
+      "to": "Petronas Twin Towers",
+      "meters": 6336.672782685117,
+      "elapsed_ms": 783,
+      "vertices": 387,
+      "steps": 21
+    },
+    {
+      "run": 1,
+      "from": "Dataran Merdeka",
+      "to": "KL Sentral",
+      "meters": 2686.8507621658996,
+      "elapsed_ms": 61,
+      "vertices": 143,
+      "steps": 8
+    },
+    {
+      "run": 1,
+      "from": "George Town",
+      "to": "Gurney Paragon",
+      "meters": 5283.820597152543,
+      "elapsed_ms": 177,
+      "vertices": 264,
+      "steps": 12
+    },
+    {
+      "run": 1,
+      "from": "Kuching Waterfront",
+      "to": "Vivacity Megamall",
+      "meters": 6110.991203633388,
+      "elapsed_ms": 140,
+      "vertices": 225,
+      "steps": 17
+    },
+    {
+      "run": 1,
+      "from": "Kota Kinabalu",
+      "to": "Suria Sabah",
+      "meters": 1673.7386270930385,
+      "elapsed_ms": 58,
+      "vertices": 73,
+      "steps": 10
+    },
+    {
+      "run": 1,
+      "from": "KL Sentral",
+      "to": "George Town",
+      "meters": 398397.2316794222,
+      "elapsed_ms": 14346,
+      "vertices": 6834,
+      "steps": 148
+    },
+    {
+      "run": 1,
+      "from": "KL Sentral",
+      "to": "Shah Alam",
+      "meters": 32866.6732952847,
+      "elapsed_ms": 1500,
+      "vertices": 819,
+      "steps": 43
+    }
+  ],
+  "passed": true
+}

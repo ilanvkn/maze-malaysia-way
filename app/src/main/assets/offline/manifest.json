@@ -1,19 +1,19 @@
 {
   "schema": 1,
-  "summary": "Malaysia + Singapore/Brunei \u00b7 OSM 4 Nov 2026 \u00b7 about 1.3 GB installed",
+  "summary": "Malaysia + Singapore/Brunei \u00b7 OSM 4 Nov 2026 \u00b7 revised road graph",
+  "osm_timestamp": "2026-11-04T21:21:03Z",
   "files": {
     "roads.sqlite": {
-      "bytes": 716730368,
-      "sha256": "260ee312be9476e7d97b1b02b3fc7bb801242f5630b2969a9920e271d6e83b7a"
-    },
-    "region.mbtiles": {
-      "bytes": 294506496,
-      "sha256": "fca6976425e3b1bab3719375dd1743573f825935a5a6550208386874b723a01b"
+      "bytes": 731869184,
+      "sha256": "032c24ae6e8c01b47d81181183e645efcfebe699f0c48f3b094bd27caf6518da"
     },
     "places.sqlite": {
       "bytes": 236511232,
       "sha256": "de7c21fa2b17ecf981182ddda9d1c00d7c3a6ad26b639485cad13f23f0c29ca2"
+    },
+    "region.mbtiles": {
+      "bytes": 294506496,
+      "sha256": "fca6976425e3b1bab3719375dd1743573f825935a5a6550208386874b723a01b"
     }
-  },
-  "osm_timestamp": "2026-11-04T21:21:03Z"
+  }
 }

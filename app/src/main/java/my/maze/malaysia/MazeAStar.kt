@@ -3,7 +3,7 @@ package my.maze.malaysia
 import java.util.PriorityQueue
 
 enum class RouteSearchMode(val weight: Double, val label: String) {
-    QUICK(8.0, "Quick preview"), CAREFUL(1.0, "Careful A* · may take longer")
+    QUICK(4.0, "Quick preview"), CAREFUL(1.0, "Careful A* · may take longer")
 }
 internal data class SearchArc<K, E>(val to: K, val seconds: Double, val edge: E)
 internal data class SearchResult<E>(val edges: List<E>, val seconds: Double, val expanded: Int)
