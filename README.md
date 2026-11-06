@@ -24,9 +24,9 @@ The current regional pack includes Peninsular Malaysia, Sabah and Sarawak, plus 
 
 **This is an early developer preview.** Routes can fail or take substantial detours. No active turn-by-turn navigation, live traffic, lane guidance, ferry routing or guaranteed fastest/legal-access claim. A mapped shop point is not a verified entrance. [Read the tested limits](docs/QUALITY.md) before relying on the preview.
 
-<p align="center"><img src="docs/assets/offline-night.png" alt="Actual Maze Android Night map showing a saved KL Sentral to Petronas Twin Towers route preview" width="270"></p>
+<p align="center"><img src="docs/assets/setup.png" alt="Maze native first-use screen with account-free Malaysia map download and ZIP import" width="270"> <img src="docs/assets/community.png" alt="Maze native dark community sheet with deliberate sharing and optional contribution" width="270"></p>
 
-The screenshot is an actual earlier 0.3 offline lab render, not a design mockup. It demonstrates the retained map UI, not validation of every later feature or route quality. The long detour is a known routing problem, not an ideal route example.
+Actual 0.3.2 minified QA app screenshots, not mockups. The isolated QA identity exercises first use without replacing an existing installation or its trips. Screenshots do not certify full accessibility, physical GPS or route quality.
 
 ## Try it
 
@@ -39,7 +39,7 @@ Download the **developer-preview APK**, the matching **Malaysia offline pack ZIP
 
 The app links directly to the matching ZIP, supports cancelling import, and explains file/storage failures. With a map ready, open **More → Community & sharing** to invite someone through the Android Sharesheet, find a first contribution, or review a mapped-place report on GitHub. The invitation contains no location or trip data. Posting on GitHub uses your own optional account; maps stay account-free.
 
-See [the product direction](docs/PRODUCT-DIRECTION.md) for the engineering, design, community and operations decisions. These changes are in the 0.3.2 source; the 0.3.1 release remains a separate earlier artifact.
+See [the product direction](docs/PRODUCT-DIRECTION.md) for the engineering, design, community and operations decisions. The 0.3.2 preview uses the same hash-pinned country pack as the 0.3.1 data release.
 
 The APK pins the three dataset hashes. Another pack version will be rejected rather than silently mixed. GPS can work without internet, but acquiring a fix indoors or after a cold start can be slow; approximate permission needs an available network location provider. [GPS behavior](docs/GPS.md).
 
