@@ -38,7 +38,7 @@ class MazeViewModel(application:Application,private val saved:SavedStateHandle):
    try{
     withContext(Dispatchers.IO){importMalaysiaPack(getApplication(),uri){done,total->withContext(Dispatchers.Main){state=state.copy(packProgress=done.toFloat()/total,packStatus="Importing Malaysia pack · ${done*100/total}%")}}}
     localPack=MazeLocalPack(getApplication());state=state.copy(packChecking=true,packProgress=null);preparePack()
-   }catch(e:CancellationException){state=state.copy(packProgress=null,packChecking=false,packStatus="Import cancelled. Choose your ZIP to try again.",packError=null);throw e}
+   }catch(e:CancellationException){state=state.copy(packProgress=null,packChecking=false,packStatus="Import cancelled. Choose your ZIP to try again.",packError=null,message="Import cancelled. Choose your ZIP to try again.");throw e}
    catch(e:Exception){state=state.copy(packProgress=null,packChecking=false,packError=importFailureMessage(e),packStatus="Your map is not imported yet.")}
   }
  }

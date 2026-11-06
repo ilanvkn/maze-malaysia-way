@@ -32,10 +32,14 @@ The screenshot is an actual earlier 0.3 offline lab render, not a design mockup.
 
 Download the **developer-preview APK**, the matching **Malaysia offline pack ZIP**, and their checksums from the [release page](https://github.com/ilanvkn/maze-malaysia-way/releases). The APK is locally debug-signed for development, non-debuggable, and not a Play Store release. Android 8/API 26 or newer is required. Independent physical-device testing is still needed.
 
-1. Install the APK on your own non-production test device.
-2. Keep the country ZIP intact. Allow roughly 2 GB of free space for the ZIP, installed data and staging; more may be needed while updating.
+1. Install the APK on your own non-production test device. Maze opens a guided setup screen; no account or GPS permission is needed.
+2. Keep the country ZIP intact. Allow at least 3 GB of free space for the ZIP, installed data and staging; more may be needed while updating.
 3. Open Maze → **Import Malaysia pack** → select the ZIP in Android's file picker.
 4. Try a search and route, then repeat in airplane mode. Offline operation starts **after** import.
+
+The app links directly to the matching ZIP, supports cancelling import, and explains file/storage failures. With a map ready, open **More → Community & sharing** to invite someone through the Android Sharesheet, find a first contribution, or review a mapped-place report on GitHub. The invitation contains no location or trip data. Posting on GitHub uses your own optional account; maps stay account-free.
+
+See [the product direction](docs/PRODUCT-DIRECTION.md) for the engineering, design, community and operations decisions. These changes are in the 0.3.2 source; the 0.3.1 release remains a separate earlier artifact.
 
 The APK pins the three dataset hashes. Another pack version will be rejected rather than silently mixed. GPS can work without internet, but acquiring a fix indoors or after a cold start can be slow; approximate permission needs an available network location provider. [GPS behavior](docs/GPS.md).
 

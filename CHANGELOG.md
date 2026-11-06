@@ -1,5 +1,12 @@
 # Changes
 
+## 0.3.2 product flow
+
+- Account-free setup screen with a direct matching-pack link, import progress, cancellation, storage preflight and actionable errors.
+- Native community hub, privacy-safe project invitation through Android Sharesheet and reviewable public-OSM report drafts.
+- Wrapped journey actions and retained sheet state across recreation; isolated QA app identity for first-use testing.
+- Offline APK payload gate, verified glyph caching/retries, source-CI report artifacts and product direction with honest adoption metrics.
+
 ## 0.3.1 community preview
 
 - Welcoming Malaysia-focused project home, contribution guide, conduct expectations and concrete roadmap.

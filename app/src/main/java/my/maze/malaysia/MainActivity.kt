@@ -1,5 +1,8 @@
 package my.maze.malaysia
 
+import android.content.Intent
+import android.content.ActivityNotFoundException
+import androidx.compose.ui.platform.LocalContext
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -19,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.semantics.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -53,7 +57,7 @@ class MainActivity:ComponentActivity() {
         super.onCreate(savedInstanceState);enableEdgeToEdge()
         MapLibre.getInstance(this)
         val dispatcher=okhttp3.Dispatcher().apply { maxRequests=4;maxRequestsPerHost=4 }
-        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().dispatcher(dispatcher).addNetworkInterceptor { chain -> chain.proceed(chain.request().newBuilder().header("User-Agent","MazeMalaysiaWay/0.3.1 (Android offline community preview)").build()) }.build())
+        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().dispatcher(dispatcher).addNetworkInterceptor { chain -> chain.proceed(chain.request().newBuilder().header("User-Agent","MazeMalaysiaWay/0.3.2 (Android offline community preview)").build()) }.build())
         setContent {
             val vm:MazeViewModel=viewModel();model=vm
             MazeTheme(vm.state.appearance) { night -> SideEffect{androidx.core.view.WindowCompat.getInsetsController(window,window.decorView).apply{isAppearanceLightStatusBars=!night;isAppearanceLightNavigationBars=!night}};MazeScreen(vm,night,onImportPack={packPicker.launch(arrayOf("application/zip","application/octet-stream"))}) { locationPermissions.launch(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION)) } }
@@ -77,15 +81,18 @@ class MainActivity:ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class,ExperimentalLayoutApi::class)
 @Composable fun MazeScreen(model:MazeViewModel,night:Boolean,onImportPack:()->Unit,onLocation:()->Unit) {
  val s=model.state;val colors=MaterialTheme.colorScheme
- var sheet by remember { mutableStateOf("") };var expanded by remember { mutableStateOf(true) };var explain by remember { mutableStateOf(false) }
+ var sheet by rememberSaveable { mutableStateOf("") };var expanded by remember { mutableStateOf(true) };var explain by remember { mutableStateOf(false) }
  var mapReady by remember { mutableStateOf(false) };var header by remember{mutableStateOf(0)};var panel by remember{mutableStateOf(0)};var panelWidth by remember{mutableStateOf(0)}
  val window=LocalWindowInfo.current.containerSize;val wide=window.width>window.height;val compactHeader=wide&&LocalDensity.current.fontScale>=1.5f;val maxPanel=with(LocalDensity.current){window.height.toDp()}*(if(wide).78f else .50f)
- val route=s.routes.getOrNull(s.selectedRoute);val uri=LocalUriHandler.current
+ val route=s.routes.getOrNull(s.selectedRoute);val uri=LocalUriHandler.current;val context=LocalContext.current
+ fun openExternal(url:String){try{uri.openUri(url)}catch(_:ActivityNotFoundException){model.message("No browser is available. You can visit the Maze GitHub project on another device.")}catch(_:IllegalArgumentException){model.message("This link could not be opened. Try the Maze GitHub project in your browser.")}}
+ fun shareMaze(){try{context.startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply{type="text/plain";putExtra(Intent.EXTRA_TEXT,MAZE_INVITATION)},"Share Maze"))}catch(_:ActivityNotFoundException){model.message("No sharing app is available. Visit github.com/ilanvkn/maze-malaysia-way to share the project link.")}}
+ var reportConfirmation by rememberSaveable{mutableStateOf(false)}
  val mapStyle=s.localBase+if(night)"/night.json" else "/day.json"
- if(!s.packReady&&route==null)MazeWelcome(s,onDownload={runCatching{uri.openUri("https://github.com/ilanvkn/maze-malaysia-way/releases/download/v0.3.1-community.1/Maze-Malaysia-offline-2026-11-04.zip")}.onFailure{model.message("No browser is available. Download the matching pack from the Maze GitHub release page on another device.")}},onImport=onImportPack,onCancel=model::cancelPackImport,onSaved={sheet="saved"},onCommunity={sheet="community"})
+ if(!s.packReady&&route==null)MazeWelcome(s,onDownload={openExternal(MAZE_PACK_DOWNLOAD)},onImport=onImportPack,onCancel=model::cancelPackImport,onSaved={sheet="saved"},onCommunity={sheet="community"})
  else Box(Modifier.fillMaxSize().background(colors.background)) {
   if(s.packReady)MazeMap(s,Modifier.fillMaxSize(),topInset=header+20,bottomInset=if(wide)40 else panel+20,rightInset=if(wide)panelWidth+20 else 40,styleUri=mapStyle){mapReady=it}
   Surface(Modifier.align(Alignment.TopStart).onSizeChanged{header=it.height}.then(if(wide)Modifier.width(330.dp)else Modifier.fillMaxWidth()).statusBarsPadding().padding(12.dp),shape=RoundedCornerShape(24.dp),shadowElevation=5.dp) {
@@ -104,7 +111,7 @@ class MainActivity:ComponentActivity() {
     if(s.routeBusy){LinearProgressIndicator(Modifier.fillMaxWidth().padding(vertical=6.dp));Text("Long offline trips can take up to 45 seconds.",style=MaterialTheme.typography.bodySmall);TextButton(onClick=model::cancelRoute){Text("Cancel route")}}
     if(s.message!=null)Surface(color=colors.secondaryContainer,shape=RoundedCornerShape(12.dp),modifier=Modifier.padding(vertical=6.dp).semantics{liveRegion=LiveRegionMode.Polite}){Text(s.message,Modifier.padding(12.dp),style=MaterialTheme.typography.bodySmall)}
     if(expanded) {
-     Row {TextButton(onClick={model.query("");sheet="origin"}){Text("Change start")};TextButton(onClick={explain=true}){Text("Locate me")};TextButton(onClick={sheet="offline"}){Text("Map area")} }
+     FlowRow(horizontalArrangement=Arrangement.spacedBy(4.dp)) {TextButton(onClick={model.query("");sheet="origin"}){Text("Change start")};TextButton(onClick={explain=true}){Text("Locate me")};TextButton(onClick={sheet="offline"}){Text("Map area")} }
      if(s.origin.id=="current")Text(s.origin.area,style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)
      TextButton(onClick={model.nearbyAccess();sheet="access"},enabled=s.packReady){Text("Nearby entrances & exits")}
      if(route!=null) {
@@ -129,11 +136,24 @@ class MainActivity:ComponentActivity() {
     "saved"->{Text("Saved trips",style=MaterialTheme.typography.headlineSmall);Text("Up to four trips, stored only on this device. Saved roads and estimates may be out of date.",Modifier.padding(vertical=12.dp));if(s.savedTrips.isEmpty())Text("No saved trips yet. Find a route, then choose Save trip.");s.savedTrips.forEach{trip->ListItem(headlineContent={Text(trip.destination.name)},supportingContent={Text("From ${trip.origin.name} · saved ${timeLabel(trip.savedAt)}"+(if(trip.sample)" · sample" else ""))},modifier=Modifier.clickable{model.openTrip(trip);sheet=""})};TextButton(onClick=model::clearTrips){Text("Clear saved trips")}}
     "offline"->{Text("Malaysia offline pack",style=MaterialTheme.typography.headlineSmall);Text(s.packStatus,Modifier.padding(vertical=12.dp));if(!s.packReady)Button(onClick=onImportPack,enabled=s.packProgress==null){Text("Choose offline pack")};Text("Maps, search and conservative driving previews run on this device. The regional extract also includes Singapore and Brunei. Shops and entrances are available only where mapped in OpenStreetMap. Building points do not identify a doorway. Motorway exits are tagged junctions, not building exits. Zoom above 14 enlarges existing detail. No live traffic or active navigation.");TextButton(onClick=model::removePack,enabled=s.packProgress==null&&!s.routeBusy){Text(if(s.packReady)"Remove offline pack" else "Clear old map files")};Text("© OpenStreetMap contributors · ODbL 1.0 · Geofabrik Shortbread",Modifier.padding(top=16.dp))}
     "credits"->{Text("Offline map credits",style=MaterialTheme.typography.headlineSmall);Text("© OpenStreetMap contributors · Open Database License 1.0. Regional extracts supplied by Geofabrik, Shortbread schema 1.0. Noto Sans glyphs use the SIL Open Font License 1.1; MapLibre demotiles packaging uses BSD 3-Clause. The regional pack includes Singapore and Brunei. Mapped features can be missing or outdated.",Modifier.padding(vertical=16.dp));Text("Data license: opendatacommons.org/licenses/odbl/1-0/\nAttribution: openstreetmap.org/copyright") }
-    "community"->{Text("Build Maze together",style=MaterialTheme.typography.headlineSmall);Text("No account is needed to use your map. GitHub is optional when you choose to contribute.");TextButton(onClick={runCatching{uri.openUri("https://github.com/ilanvkn/maze-malaysia-way/discussions/4")}}){Text("Join the conversation")}}
-    "settings"->{Text("Make yourself at home",style=MaterialTheme.typography.headlineSmall);Text("Appearance",Modifier.padding(top=16.dp));Appearance.entries.forEach{mode->Row(Modifier.fillMaxWidth().heightIn(min=48.dp).selectable(selected=s.appearance==mode,role=Role.RadioButton,onClick={model.appearance(mode)}),verticalAlignment=Alignment.CenterVertically){RadioButton(s.appearance==mode,null);Text(mode.name.lowercase().replaceFirstChar{it.uppercase()})}};Text("Route search effort",Modifier.padding(top=16.dp));RouteSearchMode.entries.forEach{mode->Row(Modifier.fillMaxWidth().heightIn(min=48.dp).selectable(selected=s.routeSearchMode==mode,role=Role.RadioButton,onClick={model.routeSearchMode(mode)}),verticalAlignment=Alignment.CenterVertically){RadioButton(s.routeSearchMode==mode,null);Text(mode.label)}};Text("Careful A* explores more of the supported road graph. It can time out and does not fix missing roads or provide live traffic.");Text("Maps, search and driving previews use the installed regional pack on this device. No API request is required. "+s.packStatus,Modifier.padding(vertical=12.dp));Text("MapLibre + Geofabrik Shortbread. © OpenStreetMap contributors, ODbL 1.0. No advertising SDK, account or background location. Searches and routes stay on this device. Data may be incomplete or outdated.");TextButton(onClick={sheet="credits"}){Text("Map data credits")}}
+    "community"->{
+     Text("Peta kita. Bina bersama.",style=MaterialTheme.typography.headlineSmall)
+     Text("Use your map without an account. If you want to help, there is a place for you here.",Modifier.padding(vertical=12.dp))
+     OutlinedButton(onClick=::shareMaze,modifier=Modifier.fillMaxWidth().heightIn(min=52.dp)){Text("Invite someone to Maze")}
+     Text("Shares a project invitation only. Your location, searches and saved trips are not included.",style=MaterialTheme.typography.bodySmall)
+     Text("One useful contribution",style=MaterialTheme.typography.titleMedium,modifier=Modifier.padding(top=20.dp))
+     TextButton(onClick={openExternal(MAZE_DISCUSSIONS)},modifier=Modifier.heightIn(min=48.dp)){Text("Say hello to the community")}
+     TextButton(onClick={openExternal("$MAZE_HOME/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22")},modifier=Modifier.heightIn(min=48.dp)){Text("Find a first contribution")}
+     TextButton(onClick={reportConfirmation=true},modifier=Modifier.heightIn(min=48.dp)){Text("Report a mapped place")}
+     Text("Know a place? Spot a problem? Help with Malay, English, Chinese or Tamil copy, accessibility, or testing. Public reports should use public landmarks.",Modifier.padding(vertical=12.dp))
+     Text("GitHub opens in your browser. Reading is public; posting needs your own GitHub account. Nothing is submitted automatically.",style=MaterialTheme.typography.bodySmall)
+     s.message?.let{Text(it,Modifier.semantics{liveRegion=LiveRegionMode.Polite})}
+    }
+    "settings"->{Text("Make yourself at home",style=MaterialTheme.typography.headlineSmall);Text("Appearance",Modifier.padding(top=16.dp));Appearance.entries.forEach{mode->Row(Modifier.fillMaxWidth().heightIn(min=48.dp).selectable(selected=s.appearance==mode,role=Role.RadioButton,onClick={model.appearance(mode)}),verticalAlignment=Alignment.CenterVertically){RadioButton(s.appearance==mode,null);Text(mode.name.lowercase().replaceFirstChar{it.uppercase()})}};Text("Route search effort",Modifier.padding(top=16.dp));RouteSearchMode.entries.forEach{mode->Row(Modifier.fillMaxWidth().heightIn(min=48.dp).selectable(selected=s.routeSearchMode==mode,role=Role.RadioButton,onClick={model.routeSearchMode(mode)}),verticalAlignment=Alignment.CenterVertically){RadioButton(s.routeSearchMode==mode,null);Text(mode.label)}};Text("Careful A* explores more of the supported road graph. It can time out and does not fix missing roads or provide live traffic.");Text("Maps, search and driving previews use the installed regional pack on this device. No API request is required. "+s.packStatus,Modifier.padding(vertical=12.dp));Text("MapLibre + Geofabrik Shortbread. © OpenStreetMap contributors, ODbL 1.0. No advertising SDK, account or background location. Searches and routes stay on this device. Data may be incomplete or outdated.");TextButton(onClick={sheet="community"},modifier=Modifier.heightIn(min=48.dp)){Text("Community & sharing")};TextButton(onClick={sheet="credits"}){Text("Map data credits")}}
    }
    TextButton(onClick={sheet=""},modifier=Modifier.heightIn(min=48.dp)){Text("Back to map")}
   }
  }
+ if(reportConfirmation)AlertDialog(onDismissRequest={reportConfirmation=false},title={Text("Help improve this place")},text={Column{Text("Open a draft report on GitHub and review it before posting. No report is sent by Maze.");Text(if(publicOsmLink(s.destination.id)!=null)"Includes this selected public OSM object and the app version. Your GPS start, searches and saved trips are left out." else "This selection has no public OSM identity, so only the app version is prefilled. Add a public place manually.",Modifier.padding(top=12.dp))}},confirmButton={TextButton(onClick={reportConfirmation=false;openExternal(placeReportUrl(s.destination.id,BuildConfig.VERSION_NAME))}){Text("Review on GitHub")}},dismissButton={TextButton(onClick={reportConfirmation=false}){Text("Keep exploring")}})
  if(explain)AlertDialog(onDismissRequest={explain=false},title={Text("Your location, your choice")},text={Text("Use one foreground fix as the start. Coordinates are used on this device when you request a route. Saving that trip stores its coordinates on this device. No background location or history upload.")},confirmButton={TextButton(onClick={explain=false;onLocation()}){Text("Continue")}},dismissButton={TextButton(onClick={explain=false}){Text("Choose manually")}})
 }

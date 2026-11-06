@@ -8,6 +8,7 @@ android {
  getByName("debug") { buildConfigField("boolean","IS_LAB","false"); buildConfigField("String","GATEWAY_BASE","\"\"") }
  getByName("release") { buildConfigField("boolean","IS_LAB","false"); val gateway=providers.gradleProperty("mazeGatewayBase").orNull ?: ""; require(gateway.isEmpty() || Regex("https://[a-zA-Z0-9.-]+(:[0-9]{1,5})?(/[a-zA-Z0-9_./-]*)?").matches(gateway)) { "mazeGatewayBase must be a credential-free HTTPS base URL" }; buildConfigField("String","GATEWAY_BASE","\""+gateway+"\""); isMinifyEnabled = true; isShrinkResources = true; proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro") }
  create("lab") { initWith(getByName("release")); signingConfig=signingConfigs.getByName("debug"); applicationIdSuffix=".lab"; versionNameSuffix="-lab"; buildConfigField("boolean","IS_LAB","true"); buildConfigField("String","GATEWAY_BASE","\"http://10.0.2.2:8787\"") }
+ create("qa") { initWith(getByName("lab")); applicationIdSuffix=".qa"; versionNameSuffix="-qa" }
  }
  buildFeatures { compose = true; buildConfig = true }
  compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
