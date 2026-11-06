@@ -10,7 +10,7 @@ The extension is reachable from setup without a country pack, from More and from
 
 The exact installed QA APK matched SHA256 `4982abeb0fa6f2efc620e743c0c0d088cbec5683f386d500ac0c234aa43b384d`, version `0.4.1-gate-pilot-qa`, code 7. It is locally Android Debug-signed and non-debuggable, with package `my.maze.malaysia.qa` and launcher label **Maze · Gate Pilot**. It installs separately from the current lab app. No production signing or public release qualification is claimed.
 
-On the explicitly owned API 35 ARM64 emulator in airplane mode, native checks passed:
+On the explicitly owned API 35 ARM64 emulator in airplane mode, the prototype native checks passed. First-use without a country pack was exercised on a predecessor build; the final APK repeated import, destination handoff, purpose, Night and enlarged-text checks with the map installed:
 
 - Fictional scenarios are available without the regional map; no route action is offered for their absent coordinates.
 - Invalid import retains current records; import review cancellation retains them; accepted import survives an app restart.
