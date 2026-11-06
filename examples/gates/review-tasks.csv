@@ -1,0 +1,9 @@
+task_id,scenario,review_question
+V01,Visitor at fictional site,Which entrance would you investigate and why?
+D01,Delivery visit,What changes when you choose Delivery?
+S01,Staff visit,Does selecting Staff establish permission to enter?
+C01,Reported closed gate,Should a recent check override a closure?
+A01,Old access record,What would you do before using this record?
+U01,Unconfirmed gate,Which information is missing?
+I01,Import fictional template,Can you cancel a replacement and recover the previous records?
+T01,Reported source check,Does this mean Maze independently checked the entrance?

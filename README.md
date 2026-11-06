@@ -70,3 +70,7 @@ Original Maze code is **MIT licensed**. OpenStreetMap and derived databases rema
 We are starting with Android and a small maintainer group. There is no paid traffic feed, guaranteed support service or promise that every road is solved. What we can offer is readable code, reproducible reports, honest limitations and a place to build together.
 
 **Jump in: [introduce yourself](https://github.com/ilanvkn/maze-malaysia-way/discussions), [pick a first issue](https://github.com/ilanvkn/maze-malaysia-way/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22), or tell us one thing Maze should do better in your part of Malaysia.**
+
+## Gate pilot prototype
+
+This development branch adds an optional offline gate-record experiment. It includes fictional scenarios that cannot be routed to, reviewed JSON import and source-reported access checks. No real participating site or field benefit has been established. See [the pilot protocol and test instructions](docs/GATE-PILOT.md). Ordinary map use remains account-free.

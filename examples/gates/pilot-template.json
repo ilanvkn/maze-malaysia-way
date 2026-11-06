@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "site": "Fictional review site",
+  "source": "Hand-authored synthetic example; no real gate observations",
+  "demo": true,
+  "permission": "synthetic_only",
+  "gates": [
+    {
+      "id": "example-a",
+      "name": "Fictional visitor gate",
+      "access": "public",
+      "availability": "unknown",
+      "instructions": "Ask the operator about current hours. This is a software-test fixture.",
+      "checked_on": "",
+      "checked_by": "",
+      "evidence": "",
+      "lat": null,
+      "lon": null,
+      "motorcar": "unknown"
+    }
+  ]
+}
