@@ -1,0 +1,16 @@
+.gradle/
+**/build/
+local.properties
+data/
+artifacts/
+*.apk
+*.aab
+*.keystore
+*.jks
+*.sqlite
+*.mbtiles
+*.osm.pbf
+app/src/main/assets/offline/glyphs/
+__pycache__/
+*.pyc
+.DS_Store

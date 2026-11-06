@@ -1,0 +1,14 @@
+package my.maze.malaysia
+import org.junit.Test
+import org.junit.Assert.*
+import kotlinx.coroutines.runBlocking
+import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.MockResponse
+class MazeRecoveryTest {
+ @Test fun gatewayRequiresExplicitSecureConfiguration(){assertNull(validateGateway("",false));assertNotNull(validateGateway("https://maps.example.org/",false));for(v in listOf("http://maps.example.org","https://u:p@maps.example.org","https://maps.example.org/?key=secret","http://127.0.0.1"))assertTrue(runCatching{validateGateway(v,false)}.isFailure);assertNotNull(validateGateway("http://127.0.0.1",true));assertTrue(runCatching{validateGateway("http://public.example",true)}.isFailure)}
+ @Test fun circuitHasBoundedCooldown(){var now=0L;val g=ServiceGate{now};repeat(3){g.failure()};val e=runCatching{g.permit()}.exceptionOrNull() as ServiceProblem;assertEquals(30,e.waitSeconds);now=30000;g.permit();g.success();g.permit()}
+ @Test fun transientFailureRetriesOnce()=runBlocking{val server=MockWebServer();server.start();try{server.enqueue(MockResponse().setResponseCode(503));server.enqueue(MockResponse().setBody("""{"maze":{"mode":"fixture"},"places":[{"id":"klcc","name":"KLCC","area":"KL","lat":3.15,"lon":101.7}]}"""));val repo=MazeRepository(server.url("/").toString(),true,{});assertEquals("KLCC",repo.search("klcc").single().name);assertEquals(2,server.requestCount);repo.search("klcc");assertEquals(2,server.requestCount)}finally{server.shutdown()}}
+ @Test fun rateLimitDoesNotRetryOrStorm()=runBlocking{val server=MockWebServer();server.start();try{server.enqueue(MockResponse().setResponseCode(429).setHeader("Retry-After","30"));val repo=MazeRepository(server.url("/").toString(),true,{});repeat(2){assertEquals(ProblemKind.RATE_LIMITED,(runCatching{repo.search("klcc")}.exceptionOrNull() as ServiceProblem).kind)};assertEquals(1,server.requestCount)}finally{server.shutdown()}}
+ @Test fun malformedRouteNeverBecomesRoad()=runBlocking{val server=MockWebServer();server.start();try{server.enqueue(MockResponse().setBody("""{"maze":{"mode":"fixture"},"code":"Ok","routes":[]}"""));val repo=MazeRepository(server.url("/").toString(),true,{});assertEquals(ProblemKind.INVALID_DATA,(runCatching{repo.routes(landmarks[0],landmarks[1])}.exceptionOrNull() as ServiceProblem).kind);assertEquals(1,server.requestCount)}finally{server.shutdown()}}
+ @Test fun savedTripRoundTripAndCorruption(){val trip=SavedTrip(tripKey(landmarks[0],landmarks[1]),landmarks[0],landmarks[1],RoadRoute(listOf(landmarks[0].point,landmarks[1].point),listOf(RoadStep("Arrive",0.0)),1200.0,180.0,"Road"),1234,"Lab",1200,true);val encoded=TripCodec.encode(listOf(trip));assertEquals(trip,TripCodec.decode(encoded).single());assertTrue(runCatching{TripCodec.decode(encoded.replace("Lab","Bad"))}.isFailure);assertTrue(runCatching{TripCodec.encode(List(5){trip})}.isFailure)}
+}
