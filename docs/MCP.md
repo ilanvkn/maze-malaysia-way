@@ -1,6 +1,6 @@
 # Maze local catalog MCP
 
-A stdio MCP service implemented with Python 3.10+ standard library. It explicitly supports protocol revision **2025-11-25**; it is not a claim of implementing all later revisions. It does not open a network listener, log query bodies, control devices, read current GPS, upload data, route trips or execute arbitrary SQL/files/shell commands.
+A stdio MCP service implemented with Python 3.10+ standard library. The Python SQLite build must include FTS4 (as on the tested Mac and Linux CI); unsupported builds fail startup rather than falling back to fabricated results. It explicitly supports protocol revision **2025-11-25**; it is not a claim of implementing all later revisions. It does not open a network listener, log query bodies, control devices, read current GPS, upload data, route trips or execute arbitrary SQL/files/shell commands.
 
 ## Configure explicitly
 
