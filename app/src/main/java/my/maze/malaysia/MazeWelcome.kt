@@ -21,7 +21,8 @@ import androidx.compose.ui.unit.dp
     onImport: () -> Unit,
     onCancel: () -> Unit,
     onSaved: () -> Unit,
-    onCommunity: () -> Unit
+    onCommunity: () -> Unit,
+    onGatePilot: () -> Unit
 ) {
     val colors = MaterialTheme.colorScheme
     Surface(Modifier.fillMaxSize(), color = colors.background) {
@@ -68,6 +69,7 @@ import androidx.compose.ui.unit.dp
                     }
                 }
                 if (state.savedTrips.isNotEmpty()) TextButton(onClick = onSaved, modifier = Modifier.heightIn(min = 48.dp)) { Text("Open saved trips") }
+                TextButton(onClick = onGatePilot, modifier = Modifier.heightIn(min = 48.dp)) { Text("Try gate pilot") }
                 HorizontalDivider()
                 Text("Peta kita. Bina bersama.", style = MaterialTheme.typography.titleMedium)
                 Text("Maze is built in the open. Help with a place, a test, or a better word.")
