@@ -24,12 +24,14 @@ internal class MazeForegroundLocation(private val activity: Activity) {
     private var generation = 0
     private var deadline: Runnable? = null
 
-    fun cancel() {
+    fun cancel(): Boolean {
+        val wasActive = deadline != null || listeners.isNotEmpty()
         generation++
         deadline?.let(handler::removeCallbacks)
         deadline = null
         listeners.forEach { runCatching { manager.removeUpdates(it) } }
         listeners.clear()
+        return wasActive
     }
 
     fun request(callback: (LocationOutcome) -> Unit) {
