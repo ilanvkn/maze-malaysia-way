@@ -1,0 +1,36 @@
+name: GPS or permission problem
+description: Help us reproduce one concrete problem.
+body:
+  - type: markdown
+    attributes:
+      value: "Use public landmarks or synthetic examples. Do not attach GPS histories, saved-trip files or unfiltered logs."
+  - type: textarea
+    id: environment
+    attributes:
+      label: "App version, Android API and device model"
+    validations:
+      required: true
+  - type: textarea
+    id: permission
+    attributes:
+      label: "Precise or approximate permission? Are location services enabled?"
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: "What happened, and what did you expect?"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: "Steps using a public place or synthetic fix; include any error text"
+    validations:
+      required: true
+  - type: textarea
+    id: limits
+    attributes:
+      label: "Indoors/outdoors? Actual GNSS or emulator simulation? No personal coordinates needed."
+    validations:
+      required: true

@@ -1,29 +1,68 @@
-# Maze · Malaysia Way
+<p align="center"><img src="docs/assets/maze-banner.svg" alt="Maze — Malaysia Way. Peta kita. Bina bersama." width="960"></p>
 
-An offline-first Android map prototype built with Kotlin, Compose and MapLibre Native. After importing a matching regional pack, maps, local place/address search, mapped entrance/exit lookup and bounded road-route previews run on-device. No hosted map/search/routing API is needed for that flow.
+# Let's crack the maze code.
 
-**Development snapshot, not a store release or active navigation product.** This public source was copied from an ongoing0.3offline-beta sprint. It does not inherit final acceptance from later changes in that workspace. Route search can fail within its budget; incomplete OSM data, conservative road exclusions and junction snapping limit coverage. No live traffic, lane guidance, guaranteed legal entrance access or fastest-route claim is made.
+**Selamat datang, Malaysia.** Maze is an open-source map project for the places we know, the roads we travel, and the details that still go missing.
 
-## Build
+A shop in your taman. An entrance that is actually usable. A road in Sabah or Sarawak that deserves the same attention as one in KL. We want a map that works when the connection doesn't—and a project Malaysians can help shape.
 
-Use Java17, Android SDK platform36/build-tools35.0.0 and a compatible Android development environment. Set ANDROID_HOME or create an untracked local.properties with your SDK path. The checked-in Gradle wrapper pins8.14.3 with its distribution checksum. Building downloads dependencies; application offline operation is a separate claim.
+**Peta kita. Bina bersama.** Whether you write Kotlin, contribute to OpenStreetMap, test a route, improve Bahasa Melayu copy, or explain what is wrong with a place near you: you're welcome here. Contributors from everywhere are welcome too. No contribution is too local to matter.
+
+[Start contributing](CONTRIBUTING.md) · [Try the preview](https://github.com/ilanvkn/maze-malaysia-way/releases) · [Community discussions](https://github.com/ilanvkn/maze-malaysia-way/discussions) · [Roadmap](ROADMAP.md)
+
+## What you can use today
+
+Maze is a native Android app built with Kotlin, Compose and MapLibre Native. After a matching regional pack is imported, these functions run on-device:
+
+- Vector maps with Day/Night styles and bundled fonts.
+- Local name/address search, including mapped shops and places.
+- Available entrances and motorway exits near a selected point, with explicit missing-data states.
+- Bounded, turn-aware driving-route previews; Quick search or Careful A*.
+- Explicitly saved trips and one user-requested foreground location fix. No account or advertising SDK.
+
+The current regional pack includes Peninsular Malaysia, Sabah and Sarawak, plus Singapore and Brunei. It contains 470,369 indexed records; this is an extract count, **not complete coverage of Malaysia**. Maps are based on OpenStreetMap and can be incomplete or outdated.
+
+**This is an early developer preview.** Routes can fail or take substantial detours. No active turn-by-turn navigation, live traffic, lane guidance, ferry routing or guaranteed fastest/legal-access claim. A mapped shop point is not a verified entrance. [Read the tested limits](docs/QUALITY.md) before relying on the preview.
+
+<p align="center"><img src="docs/assets/offline-night.png" alt="Actual Maze Android Night map showing a saved KL Sentral to Petronas Twin Towers route preview" width="270"></p>
+
+The screenshot is an actual earlier 0.3 offline lab render, not a design mockup. It demonstrates the retained map UI, not validation of every later feature or route quality. The long detour is a known routing problem, not an ideal route example.
+
+## Try it
+
+Download the **developer-preview APK**, the matching **Malaysia offline pack ZIP**, and their checksums from the [release page](https://github.com/ilanvkn/maze-malaysia-way/releases). The APK is locally debug-signed for development, non-debuggable, and not a Play Store release. Android 8/API 26 or newer is required. Independent physical-device testing is still needed.
+
+1. Install the APK on your own non-production test device.
+2. Keep the country ZIP intact. Allow roughly 2 GB of free space for the ZIP, installed data and staging; more may be needed while updating.
+3. Open Maze → **Import Malaysia pack** → select the ZIP in Android's file picker.
+4. Try a search and route, then repeat in airplane mode. Offline operation starts **after** import.
+
+The APK pins the three dataset hashes. Another pack version will be rejected rather than silently mixed. GPS can work without internet, but acquiring a fix indoors or after a cold start can be slow; approximate permission needs an available network location provider. [GPS behavior](docs/GPS.md).
+
+## Build from source
+
+Use Java 17, Android SDK platform 36/build-tools 35.0.0, Python 3.10+ for helpers, and the checked-in Gradle wrapper (8.14.3, distribution checksum pinned). Set `ANDROID_HOME` or create an untracked `local.properties` for your SDK.
 
 ```sh
+python3 tools/fetch-offline-glyphs.py
 ./gradlew --no-daemon :app:assembleLab :app:testLabUnitTest :app:lintLab
+python3 -B -m unittest discover -s tests -v
 ```
 
-The lab package uses standard local Android debug signing, not a publisher key. No APK, keystore, emulator image, local SDK path or app-store account is included. CI builds and runs JVM checks; it does not certify airplane-mode interaction or physical-device use. Choose your own non-production emulator explicitly. This repository does not auto-select or operate connected devices.
+The first command fetches and verifies all 256 reviewed glyph blocks. Builds download dependencies; offline **app use** is a different claim. Country databases are release assets, not Git blobs. To build and pin your own data release, follow [DATA.md](DATA.md). Build helpers, graph schema and packaging are open; no proprietary map dataset is included.
 
-## Offline data
+CI checks build/JVM/lint/Python behavior. It does not by itself prove Android interaction, field GPS, battery life or national route correctness. The repository never auto-selects a connected device.
 
-Country databases and glyph binaries are deliberately separate from Git source. **The source checkout alone has no country pack.** The included manifest identifies the maintainer's lab data, not a public download promise. Use [DATA.md](DATA.md) to build a reviewed pack, pin its manifest into the app and rebuild. Then install the APK, copy the ZIP to your test device, tap Import Malaysia pack and select it in Android's file picker.
+## Work on Maze with an assistant
 
-Font glyphs must be prepared before building a fully labelled offline app. The supplied fetch script verifies the reviewed upstream blob identities; no font service is used at runtime. Build/data preparation needs network access and substantial storage. A matching imported pack then supports airplane-mode testing. The loopback tile listener stays on the device.
+Use the repository's [Maze contributor skill](skills/maze-contributor/SKILL.md), [agent guidance](AGENTS.md), and [local MCP server](docs/MCP.md). The MCP server exposes three small read-only tools: pack status, bounded local search, and nearby mapped access. It runs locally with Python's standard library and does not control your phone, collect GPS, generate routes or supply traffic.
 
-Shop points, representative building points, entrances and motorway exits are distinct mapped facts. Missing entrances remain missing; opening hours are unverified mapped text. Road previews may snap to a junction and explicitly report unsupported/disconnected routes. Do not rely on this prototype for safety-critical travel.
+AI contributions are welcome when someone understands the code and tests it. Generated claims, invented roads, synthetic reviews and unmeasured speed promises are not. The routing core is inspectable A*, not a language model guessing directions. [Our AI and traffic work plan](docs/ROUTING-AND-AI.md) names the data and evaluation needed before those features can ship.
 
-Original app code is MIT. OSM/derived databases are ODbL, Noto fonts OFL and other libraries retain their licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). No Google Maps/Waze assets, SDK internals or proprietary map data are included.
+## Built in the open
 
-## Contribute
+Original Maze code is **MIT licensed**. OpenStreetMap and derived databases remain **ODbL 1.0**; Noto fonts are **OFL 1.1**; dependencies retain their own licenses. [License](LICENSE) · [Data recipe](DATA.md) · [Pack provenance](docs/DATA-RELEASE.md) · [Third-party notices](THIRD_PARTY_NOTICES.md) · [Security](SECURITY.md).
 
-Submit focused pull requests with reproducible synthetic tests and Android/tool versions. Report data gaps separately from algorithm/UI bugs. Keep real location histories, saved trips, participant details, credentials, signing keys and raw device logs out of issues. Preserve notices and identify the exact dataset/source revision when reporting a route. Community feedback is welcome; there is no automatic update service or zero-failure guarantee.
+We are starting with Android and a small maintainer group. There is no paid traffic feed, guaranteed support service or promise that every road is solved. What we can offer is readable code, reproducible reports, honest limitations and a place to build together.
+
+**Jump in: [introduce yourself](https://github.com/ilanvkn/maze-malaysia-way/discussions), [pick a first issue](https://github.com/ilanvkn/maze-malaysia-way/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22), or tell us one thing Maze should do better in your part of Malaysia.**

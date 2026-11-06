@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Ideas, introductions and local feedback
+    url: https://github.com/ilanvkn/maze-malaysia-way/discussions
+    about: Say hello or discuss a proposal before a large change.
+  - name: Sensitive security report
+    url: https://github.com/ilanvkn/maze-malaysia-way/security/advisories/new
+    about: Use private reporting; do not publish secrets or private location data.

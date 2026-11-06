@@ -61,9 +61,9 @@ import org.maplibre.geojson.Point
             ready=true;onReady(true)
         }
     } }},modifier=modifier) }
-    LaunchedEffect(ready,state.accessPoints){if(ready)map?.style?.getSourceAs<GeoJsonSource>("maze-access")?.setGeoJson(FeatureCollection.fromFeatures(state.accessPoints.map{Feature.fromGeometry(Point.fromLngLat(it.point.lon,it.point.lat))}))}
+    LaunchedEffect(map,styleUri,ready,state.accessPoints){if(ready)map?.style?.getSourceAs<GeoJsonSource>("maze-access")?.setGeoJson(FeatureCollection.fromFeatures(state.accessPoints.map{Feature.fromGeometry(Point.fromLngLat(it.point.lon,it.point.lat))}))}
     val route=state.routes.getOrNull(state.selectedRoute)
-    LaunchedEffect(ready,route,state.origin,state.destination,topInset,bottomInset,rightInset) {
+    LaunchedEffect(map,styleUri,ready,route,state.origin,state.destination,topInset,bottomInset,rightInset) {
         val m=map ?: return@LaunchedEffect;if(!ready)return@LaunchedEffect
         val style=m.style ?: return@LaunchedEffect
         val coordinates=route?.geometry?.map{Point.fromLngLat(it.lon,it.lat)} ?: emptyList()
