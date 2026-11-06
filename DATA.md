@@ -15,3 +15,7 @@ The packager writes a ZIP and adjacent manifest, then verifies decompressed hash
 Run `python tools/fetch-offline-glyphs.py` before the app build to obtain the reviewed Noto Sans glyphs from MapLibre demotiles. This is a build-time download; retain the packaged font and repository license texts. The fetcher pins each glyph by upstream Git blob SHA and rejects changed content. It does not execute upstream code.
 
 Validate regional POI counts, missing-coverage behavior, turn restrictions, route failures and complete airplane-mode cold starts on your explicit test target. Rebuilding an extract does not guarantee every shop, entrance, exit or route exists. The graph excludes unsupported conditional/access/barrier cases and ferries; route weights use estimates, not current traffic. These scripts and finite preview searches are research code, not a production navigation engine.
+
+## Retained maintainer pack
+
+See [docs/DATA-RELEASE.md](docs/DATA-RELEASE.md) for the exact release source timestamp, hashes and ODbL assets. `migrate-offline-grid.py INPUT OUTPUT RECEIPT` and `migrate-turn-kinds.py INPUT PLACES OUTPUT RECEIPT` preserve the historical grid/turn transformations for compatible older schemas; they are not steps to apply blindly to a current fresh build. The retained migrated graph is not asserted byte reproducible from the current builder.

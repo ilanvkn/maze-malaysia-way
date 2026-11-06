@@ -1,0 +1,36 @@
+name: Route bug or detour
+description: Help us reproduce one concrete problem.
+body:
+  - type: markdown
+    attributes:
+      value: "Use public landmarks or synthetic examples. Do not attach GPS histories, saved-trip files or unfiltered logs."
+  - type: textarea
+    id: environment
+    attributes:
+      label: "App version, pack timestamp/hash and Quick or Careful mode"
+    validations:
+      required: true
+  - type: textarea
+    id: points
+    attributes:
+      label: "Public start/end landmarks or synthetic fixture; never your home/work trip"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: "Wrong turn, long detour, missing connection, crash or budget timeout?"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "What should happen? Include a public OSM link or synthetic counterexample."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: "Steps and observed result; redact personal data before attaching anything"
+    validations:
+      required: true

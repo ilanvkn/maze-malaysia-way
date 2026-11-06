@@ -2,12 +2,7 @@ package my.maze.malaysia
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.location.LocationManager
-import android.location.Location
 import android.os.Bundle
-import android.os.CancellationSignal
-import android.os.Handler
-import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -49,9 +44,7 @@ private val Ink=Color(0xFF103C35)
 private val Warm=Color(0xFFF7FAF6)
 class MainActivity:ComponentActivity() {
     private var model:MazeViewModel?=null
-    private var locationCancellation:CancellationSignal?=null
-    private var legacyListener:android.location.LocationListener?=null
-    private val handler=Handler(Looper.getMainLooper())
+    private val foregroundLocation by lazy { MazeForegroundLocation(this) }
     private val locationPermissions=registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
         if(grants.values.any{it})findLocation() else model?.message("Location is optional. Choose a start point instead.")
     }
@@ -60,45 +53,28 @@ class MainActivity:ComponentActivity() {
         super.onCreate(savedInstanceState);enableEdgeToEdge()
         MapLibre.getInstance(this)
         val dispatcher=okhttp3.Dispatcher().apply { maxRequests=4;maxRequestsPerHost=4 }
-        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().dispatcher(dispatcher).addNetworkInterceptor { chain -> chain.proceed(chain.request().newBuilder().header("User-Agent","MazeMalaysiaWay/0.2 (Android map beta)").build()) }.build())
+        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().dispatcher(dispatcher).addNetworkInterceptor { chain -> chain.proceed(chain.request().newBuilder().header("User-Agent","MazeMalaysiaWay/0.3.1 (Android offline community preview)").build()) }.build())
         setContent {
             val vm:MazeViewModel=viewModel();model=vm
-            MazeTheme(vm.state.appearance) { night -> MazeScreen(vm,night,onImportPack={packPicker.launch(arrayOf("application/zip","application/octet-stream"))}) { locationPermissions.launch(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION)) } }
+            MazeTheme(vm.state.appearance) { night -> SideEffect{androidx.core.view.WindowCompat.getInsetsController(window,window.decorView).apply{isAppearanceLightStatusBars=!night;isAppearanceLightNavigationBars=!night}};MazeScreen(vm,night,onImportPack={packPicker.launch(arrayOf("application/zip","application/octet-stream"))}) { locationPermissions.launch(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION)) } }
         }
     }
 
     private fun findLocation() {
-        if(checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED)return
-        val manager=getSystemService(LocationManager::class.java)
-        val provider=if(manager.isProviderEnabled(LocationManager.GPS_PROVIDER))LocationManager.GPS_PROVIDER else LocationManager.NETWORK_PROVIDER
-        model?.message("Finding a current location…")
-        val accept:(Location?)->Unit={ location ->
-            locationCancellation=null
-            if(location==null)model?.message("No location fix. Choose a start point instead.")
-            else runCatching { GeoPoint(location.latitude,location.longitude) }.onSuccess { point ->
-                if(!inMalaysiaRegion(point))model?.message("This fix is outside the Malaysia map region. Choose a start point.")
-                else model?.select(Place("current","Current location","One foreground fix",point),origin=true)
-            }.onFailure { model?.message("The location fix could not be used.") }
-        }
-        try {
-            locationCancellation?.cancel()
-            if(android.os.Build.VERSION.SDK_INT>=30) {
-                val cancellation=CancellationSignal();locationCancellation=cancellation
-                manager.getCurrentLocation(provider,cancellation,mainExecutor,accept)
-                handler.postDelayed({if(locationCancellation===cancellation){cancellation.cancel();locationCancellation=null;model?.message("Location timed out. Choose a start point instead.")}},15000)
-            } else {
-                val listener=object:android.location.LocationListener {
-                    override fun onLocationChanged(location:Location){manager.removeUpdates(this);legacyListener=null;accept(location)}
-                    override fun onProviderEnabled(provider:String){}
-                    override fun onProviderDisabled(provider:String){}
-                    @Deprecated("Deprecated by Android") override fun onStatusChanged(provider:String?,status:Int,extras:Bundle?){}
-                }
-                legacyListener=listener;manager.requestSingleUpdate(provider,listener,Looper.getMainLooper())
-                handler.postDelayed({if(legacyListener===listener){manager.removeUpdates(listener);legacyListener=null;accept(null)}},15000)
+        model?.message("Finding your location… GPS may take longer outdoors without a network.")
+        foregroundLocation.request { result ->
+            when (result) {
+                is LocationOutcome.Fix -> model?.select(
+                    Place("current", "Current location", result.description, result.point), origin = true
+                )
+                is LocationOutcome.Unavailable -> model?.message(result.message)
             }
-        } catch(e:Exception){model?.message("Location unavailable. Choose a start point instead.")}
+        }
     }
-    override fun onStop(){super.onStop();locationCancellation?.cancel();locationCancellation=null;legacyListener?.let{getSystemService(LocationManager::class.java).removeUpdates(it)};legacyListener=null;handler.removeCallbacksAndMessages(null)}
+    override fun onStop() {
+        foregroundLocation.cancel()
+        super.onStop()
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -106,19 +82,19 @@ class MainActivity:ComponentActivity() {
  val s=model.state;val colors=MaterialTheme.colorScheme
  var sheet by remember { mutableStateOf("") };var expanded by remember { mutableStateOf(true) };var explain by remember { mutableStateOf(false) }
  var mapReady by remember { mutableStateOf(false) };var header by remember{mutableStateOf(0)};var panel by remember{mutableStateOf(0)};var panelWidth by remember{mutableStateOf(0)}
- val window=LocalWindowInfo.current.containerSize;val wide=window.width>window.height;val maxPanel=with(LocalDensity.current){window.height.toDp()}*(if(wide).78f else .50f)
+ val window=LocalWindowInfo.current.containerSize;val wide=window.width>window.height;val compactHeader=wide&&LocalDensity.current.fontScale>=1.5f;val maxPanel=with(LocalDensity.current){window.height.toDp()}*(if(wide).78f else .50f)
  val route=s.routes.getOrNull(s.selectedRoute);val uri=LocalUriHandler.current
  val mapStyle=s.localBase+if(night)"/night.json" else "/day.json"
  Box(Modifier.fillMaxSize().background(colors.background)) {
   if(s.packReady)MazeMap(s,Modifier.fillMaxSize(),topInset=header+20,bottomInset=if(wide)40 else panel+20,rightInset=if(wide)panelWidth+20 else 40,styleUri=mapStyle){mapReady=it}
   Surface(Modifier.align(Alignment.TopStart).onSizeChanged{header=it.height}.then(if(wide)Modifier.width(330.dp)else Modifier.fillMaxWidth()).statusBarsPadding().padding(12.dp),shape=RoundedCornerShape(24.dp),shadowElevation=5.dp) {
    Column(Modifier.padding(horizontal=16.dp,vertical=8.dp)) {
-    Row(verticalAlignment=Alignment.CenterVertically) { Image(painterResource(R.drawable.maze_icon),"Maze",Modifier.size(32.dp));Text("maze",Modifier.weight(1f).padding(start=10.dp),fontSize=25.sp,fontWeight=FontWeight.Bold);TextButton(onClick={sheet="saved"}){Text("Saved")};TextButton(onClick={sheet="settings"}){Text("More")} }
+    Row(verticalAlignment=Alignment.CenterVertically) { Image(painterResource(R.drawable.maze_icon),"Maze",Modifier.size(32.dp));if(compactHeader)Spacer(Modifier.weight(1f))else Text("maze",Modifier.weight(1f).padding(start=10.dp),maxLines=1,overflow=TextOverflow.Ellipsis,fontSize=25.sp,fontWeight=FontWeight.Bold);TextButton(onClick={sheet="saved"}){Text("Saved")};TextButton(onClick={sheet="settings"}){Text("More")} }
     TextButton(onClick={sheet="search"},modifier=Modifier.fillMaxWidth().heightIn(min=52.dp)) { Column(Modifier.weight(1f)) {Text("Where to?",style=MaterialTheme.typography.labelMedium);Text(s.destination.name,maxLines=1,overflow=TextOverflow.Ellipsis,fontWeight=FontWeight.SemiBold)};Text("Search") }
-    Text(if(s.packReady)"OFFLINE · Malaysia regional pack" else s.packStatus,style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)
+    Text(if(s.packReady&&compactHeader)"Offline pack ready" else if(s.packReady)"OFFLINE · Malaysia regional pack" else s.packStatus,style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)
     if(!s.packReady&&s.packProgress==null)TextButton(onClick=onImportPack){Text("Import Malaysia pack")}
     if(s.packProgress!=null&&!s.packReady)LinearProgressIndicator(progress={s.packProgress},modifier=Modifier.fillMaxWidth())
-    if(!s.online)Text(if(s.packReady)"Airplane-ready · on-device maps, search and routes" else if(s.packProgress!=null)"Offline pack preparing" else "Offline · import a map pack",style=MaterialTheme.typography.labelSmall)
+    if(!s.online&&!compactHeader)Text(if(s.packReady)"Airplane-ready · on-device maps, search and routes" else if(s.packProgress!=null)"Offline pack preparing" else "Offline · import a map pack",style=MaterialTheme.typography.labelSmall)
    }
   }
   Surface(Modifier.align(if(wide)Alignment.BottomEnd else Alignment.BottomCenter).then(if(wide)Modifier.width(370.dp)else Modifier.fillMaxWidth()).onSizeChanged{panel=it.height;panelWidth=it.width},shape=RoundedCornerShape(topStart=28.dp,topEnd=28.dp),shadowElevation=8.dp) {
@@ -128,6 +104,7 @@ class MainActivity:ComponentActivity() {
     if(s.message!=null)Surface(color=colors.secondaryContainer,shape=RoundedCornerShape(12.dp),modifier=Modifier.padding(vertical=6.dp).semantics{liveRegion=LiveRegionMode.Polite}){Text(s.message,Modifier.padding(12.dp),style=MaterialTheme.typography.bodySmall)}
     if(expanded) {
      Row {TextButton(onClick={model.query("");sheet="origin"}){Text("Change start")};TextButton(onClick={explain=true}){Text("Locate me")};TextButton(onClick={sheet="offline"}){Text("Map area")} }
+     if(s.origin.id=="current")Text(s.origin.area,style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)
      TextButton(onClick={model.nearbyAccess();sheet="access"},enabled=s.packReady){Text("Nearby entrances & exits")}
      if(route!=null) {
       Text("${s.origin.name} to ${s.destination.name}",style=MaterialTheme.typography.bodyMedium)
@@ -151,7 +128,7 @@ class MainActivity:ComponentActivity() {
     "saved"->{Text("Saved trips",style=MaterialTheme.typography.headlineSmall);Text("Up to four trips, stored only on this device. Saved roads and estimates may be out of date.",Modifier.padding(vertical=12.dp));if(s.savedTrips.isEmpty())Text("No saved trips yet. Find a route, then choose Save trip.");s.savedTrips.forEach{trip->ListItem(headlineContent={Text(trip.destination.name)},supportingContent={Text("From ${trip.origin.name} · saved ${timeLabel(trip.savedAt)}"+(if(trip.sample)" · sample" else ""))},modifier=Modifier.clickable{model.openTrip(trip);sheet=""})};TextButton(onClick=model::clearTrips){Text("Clear saved trips")}}
     "offline"->{Text("Malaysia offline pack",style=MaterialTheme.typography.headlineSmall);Text(s.packStatus,Modifier.padding(vertical=12.dp));if(!s.packReady)Button(onClick=onImportPack,enabled=s.packProgress==null){Text("Choose offline pack")};Text("Maps, search and conservative driving previews run on this device. The regional extract also includes Singapore and Brunei. Shops and entrances are available only where mapped in OpenStreetMap. Building points do not identify a doorway. Motorway exits are tagged junctions, not building exits. Zoom above 14 enlarges existing detail. No live traffic or active navigation.");TextButton(onClick=model::removePack,enabled=s.packProgress==null&&!s.routeBusy){Text(if(s.packReady)"Remove offline pack" else "Clear old map files")};Text("© OpenStreetMap contributors · ODbL 1.0 · Geofabrik Shortbread",Modifier.padding(top=16.dp))}
     "credits"->{Text("Offline map credits",style=MaterialTheme.typography.headlineSmall);Text("© OpenStreetMap contributors · Open Database License 1.0. Regional extracts supplied by Geofabrik, Shortbread schema 1.0. Noto Sans glyphs use the SIL Open Font License 1.1; MapLibre demotiles packaging uses BSD 3-Clause. The regional pack includes Singapore and Brunei. Mapped features can be missing or outdated.",Modifier.padding(vertical=16.dp));Text("Data license: opendatacommons.org/licenses/odbl/1-0/\nAttribution: openstreetmap.org/copyright") }
-    "settings"->{Text("Make yourself at home",style=MaterialTheme.typography.headlineSmall);Text("Appearance",Modifier.padding(top=16.dp));Appearance.entries.forEach{mode->Row(Modifier.fillMaxWidth().heightIn(min=48.dp).selectable(selected=s.appearance==mode,role=Role.RadioButton,onClick={model.appearance(mode)}),verticalAlignment=Alignment.CenterVertically){RadioButton(s.appearance==mode,null);Text(mode.name.lowercase().replaceFirstChar{it.uppercase()})}};Text("Maps, search and driving previews use the installed regional pack on this device. No API request is required. "+s.packStatus,Modifier.padding(vertical=12.dp));Text("MapLibre + Geofabrik Shortbread. © OpenStreetMap contributors, ODbL 1.0. No advertising SDK, account or background location. Searches and routes stay on this device. Data may be incomplete or outdated.");TextButton(onClick={sheet="credits"}){Text("Map data credits")}}
+    "settings"->{Column(Modifier.verticalScroll(rememberScrollState())){Text("Make yourself at home",style=MaterialTheme.typography.headlineSmall);Text("Appearance",Modifier.padding(top=16.dp));Appearance.entries.forEach{mode->Row(Modifier.fillMaxWidth().heightIn(min=48.dp).selectable(selected=s.appearance==mode,role=Role.RadioButton,onClick={model.appearance(mode)}),verticalAlignment=Alignment.CenterVertically){RadioButton(s.appearance==mode,null);Text(mode.name.lowercase().replaceFirstChar{it.uppercase()})}};Text("Route search effort",Modifier.padding(top=16.dp));RouteSearchMode.entries.forEach{mode->Row(Modifier.fillMaxWidth().heightIn(min=48.dp).selectable(selected=s.routeSearchMode==mode,role=Role.RadioButton,onClick={model.routeSearchMode(mode)}),verticalAlignment=Alignment.CenterVertically){RadioButton(s.routeSearchMode==mode,null);Text(mode.label)}};Text("Careful A* explores more of the supported road graph. It can time out and does not fix missing roads or provide live traffic.");Text("Maps, search and driving previews use the installed regional pack on this device. No API request is required. "+s.packStatus,Modifier.padding(vertical=12.dp));Text("MapLibre + Geofabrik Shortbread. © OpenStreetMap contributors, ODbL 1.0. No advertising SDK, account or background location. Searches and routes stay on this device. Data may be incomplete or outdated.");TextButton(onClick={sheet="credits"}){Text("Map data credits")}}}
    }
    TextButton(onClick={sheet=""},modifier=Modifier.heightIn(min=48.dp)){Text("Back to map")}
   }

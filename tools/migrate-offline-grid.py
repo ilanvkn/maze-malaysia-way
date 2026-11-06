@@ -1,0 +1,3 @@
+import sqlite3,pathlib,shutil,json,hashlib,sys,time
+from offline_graph_grid import build_grid
+src,out,receipt=map(pathlib.Path,sys.argv[1:]);assert not out.exists();t=time.monotonic();shutil.copyfile(src,out);db=sqlite3.connect(out);db.execute('PRAGMA journal_mode=OFF');meta=build_grid(db);db.commit();db.execute('VACUUM');assert db.execute('PRAGMA integrity_check').fetchone()[0]=='ok';db.close();meta.update(source=str(src),source_sha256=hashlib.sha256(src.read_bytes()).hexdigest(),sha256=hashlib.sha256(out.read_bytes()).hexdigest(),bytes=out.stat().st_size,seconds=time.monotonic()-t);receipt.write_text(json.dumps(meta,indent=2)+'\n');print(json.dumps(meta,indent=2))

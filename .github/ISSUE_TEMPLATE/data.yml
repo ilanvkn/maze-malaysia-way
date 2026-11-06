@@ -1,0 +1,30 @@
+name: Missing or incorrect mapped detail
+description: Help us reproduce one concrete problem.
+body:
+  - type: markdown
+    attributes:
+      value: "Use public landmarks or synthetic examples. Do not attach GPS histories, saved-trip files or unfiltered logs."
+  - type: textarea
+    id: environment
+    attributes:
+      label: "App version and pack/source date"
+    validations:
+      required: true
+  - type: textarea
+    id: place
+    attributes:
+      label: "Public OSM link or public place name/locality"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: "Missing/wrong shop, address, entrance, exit or name?"
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: "How was this verified, and is the current OSM source already corrected?"
+    validations:
+      required: true
