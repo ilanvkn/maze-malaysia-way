@@ -7,6 +7,8 @@ description: Develop or review Maze Malaysia Android maps, offline data, foregro
 
 Locate the Maze checkout and read its README/AGENTS.md. Work in the existing Kotlin/Compose/MapLibre app; do not generate a replacement app or silently add a hosted provider.
 
+For **first-use/community changes**, read `docs/PRODUCT-DIRECTION.md`. Keep map use account-free, treat GitHub as optional, and never include GPS/trips in the project invitation. Exercise cancellation/wrong-ZIP/retry and deliberate report review in the isolated `qa` variant. Verify actual package and PNG dimensions for rotation checks, not filenames or rotation markers alone.
+
 For **GPS**, read `docs/GPS.md` and the `MazeLocationPolicy` / `MazeForegroundLocation` source. Keep coarse permission separate from GPS access, use monotonic fix age, label uncertainty, and cancel foreground work on stop. Prove policy boundaries with synthetic JVM tests. Simulated fixes do not prove GNSS quality.
 
 For **routing**, read `docs/ROUTING-AND-AI.md`, `MazeAStar` and `MazeLocalRouter`. Include incoming-way/previous-node state in restrictions. Preserve budgets/cancellation and unsupported-route errors. Benchmark against a declared baseline on identical data; never call weighted previews fastest routes. Graph exclusions and inaccurate snapping cannot be repaired by a stronger heuristic alone.
