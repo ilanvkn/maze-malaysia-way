@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "cell_degrees": 0.01,
+  "rows": 3220790,
+  "scope": "Every line segment, not just graph junctions; no inferred access connectors",
+  "source_sha256": "032c24ae6e8c01b47d81181183e645efcfebe699f0c48f3b094bd27caf6518da",
+  "sha256": "f8e6aafbf278b05fc222546b5e1d6797a5b048d472d73b37238a8cff2fa17f0c",
+  "bytes": 843530240
+}

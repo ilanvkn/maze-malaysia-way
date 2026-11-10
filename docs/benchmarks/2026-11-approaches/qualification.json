@@ -1,0 +1,31 @@
+{
+  "apk_sha256": "2e9ec68453cacb4e2c403f6a02aef7e3593cfa4ebd42a68c6aab3b947d34d8e2",
+  "apk_bytes": 63860991,
+  "version": "0.4.2-road-approaches-qa",
+  "code": 8,
+  "country_zip_sha256": "6b16d4e6ffc7d432877e5cc1135ca1465e0a483a8e2ef35ea90e04eb3da9f95c",
+  "country_zip_bytes": 698632735,
+  "manifest": {
+    "schema": 1,
+    "summary": "Malaysia + Singapore/Brunei \u00b7 OSM 4 Nov 2026 \u00b7 directed segment index r3",
+    "osm_timestamp": "2026-11-04T21:21:03Z",
+    "files": {
+      "roads.sqlite": {
+        "bytes": 843530240,
+        "sha256": "f8e6aafbf278b05fc222546b5e1d6797a5b048d472d73b37238a8cff2fa17f0c"
+      },
+      "places.sqlite": {
+        "bytes": 236511232,
+        "sha256": "de7c21fa2b17ecf981182ddda9d1c00d7c3a6ad26b639485cad13f23f0c29ca2"
+      },
+      "region.mbtiles": {
+        "bytes": 294506496,
+        "sha256": "fca6976425e3b1bab3719375dd1743573f825935a5a6550208386874b723a01b"
+      }
+    }
+  },
+  "native_route_attempts": 13,
+  "native_routes_passed": 13,
+  "fixture_mode_cases": 24,
+  "proof_limits": "Explicit declared mapped-road choices, airplane-mode emulator, warmed data. No physical GPS, arrival, traffic or full accessibility qualification."
+}

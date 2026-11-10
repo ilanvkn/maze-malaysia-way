@@ -1,11 +1,11 @@
 {
   "schema": 1,
-  "summary": "Malaysia + Singapore/Brunei \u00b7 OSM 4 Nov 2026 \u00b7 revised road graph",
+  "summary": "Malaysia + Singapore/Brunei \u00b7 OSM 4 Nov 2026 \u00b7 directed segment index r3",
   "osm_timestamp": "2026-11-04T21:21:03Z",
   "files": {
     "roads.sqlite": {
-      "bytes": 731869184,
-      "sha256": "032c24ae6e8c01b47d81181183e645efcfebe699f0c48f3b094bd27caf6518da"
+      "bytes": 843530240,
+      "sha256": "f8e6aafbf278b05fc222546b5e1d6797a5b048d472d73b37238a8cff2fa17f0c"
     },
     "places.sqlite": {
       "bytes": 236511232,

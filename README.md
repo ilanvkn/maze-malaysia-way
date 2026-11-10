@@ -32,16 +32,18 @@ Actual 0.4.0 publishable minified lab APK screenshots in airplane mode, not mock
 
 **Gate Pilot usability test:** [download the separate reviewer APK](https://github.com/ilanvkn/maze-malaysia-way/releases/download/v0.4.1-gate-pilot.1/Maze-Gate-Pilot-0.4.1-qa.apk) · [checksums and instructions](https://github.com/ilanvkn/maze-malaysia-way/releases/tag/v0.4.1-gate-pilot.1). Open **Try gate pilot → Try test scenarios**; no map download is needed. All scenarios are fictional and cannot be routed to. [Findings](docs/GATE-PILOT-RESULTS.md) · [comparative journey review and next tests](docs/MAP-JOURNEY-REVIEW.md).
 
-For the full map preview, download the **developer-preview APK**, the matching **Malaysia offline pack ZIP**, and their checksums from the [0.4.0 community release](https://github.com/ilanvkn/maze-malaysia-way/releases/tag/v0.4.0-community.1). The APK is locally debug-signed for development, non-debuggable, and not a Play Store release. Android 8/API 26 or newer is required. Independent physical-device testing is still needed.
+For the improved road-approach preview, [download the APK](https://github.com/ilanvkn/maze-malaysia-way/releases/download/v0.4.2-approaches.1/Maze-0.4.2-road-approaches-qa.apk) and the [matching r3 map pack](https://github.com/ilanvkn/maze-malaysia-way/releases/download/v0.4.2-approaches.1/Maze-Malaysia-offline-2026-11-04-r3.zip). [Checksums and instructions](https://github.com/ilanvkn/maze-malaysia-way/releases/tag/v0.4.2-approaches.1). This is an isolated, locally debug-signed Android reviewer preview. Choose the mapped starting road and destination approach before calculation; no entry permission is implied. [Read the actual tests and limitations](docs/benchmarks/2026-11-approaches/README.md).
+
+For the older 0.4.0 full map preview, download the **developer-preview APK**, the matching **Malaysia offline pack ZIP**, and their checksums from the [0.4.0 community release](https://github.com/ilanvkn/maze-malaysia-way/releases/tag/v0.4.0-community.1). The APK is locally debug-signed for development, non-debuggable, and not a Play Store release. Android 8/API 26 or newer is required. Independent physical-device testing is still needed.
 
 1. Install the APK on your own non-production test device. Maze opens a guided setup screen; no account or GPS permission is needed.
 2. Keep the country ZIP intact. Allow at least 3 GB of free space for the ZIP, installed data and staging; more may be needed while updating.
 3. Open Maze → **Choose downloaded ZIP** → select the ZIP in Android's file picker.
-4. Try a search and route, then repeat in airplane mode. Offline operation starts **after** import.
+4. Try a search and route, review the two road approaches, then repeat in airplane mode. Offline operation starts **after** import.
 
 The app links directly to the matching ZIP, supports cancelling import, and explains file/storage failures. With a map ready, open **More → Community & sharing** to invite someone through the Android Sharesheet, find a first contribution, or review a mapped-place report on GitHub. The invitation contains no location or trip data. Posting on GitHub uses your own optional account; maps stay account-free.
 
-See [the product direction](docs/PRODUCT-DIRECTION.md) for the engineering, design, community and operations decisions. The 0.4.0 preview requires the revised r2 country ZIP. The source OSM date remains 4 November; the road-graph transformation changed. Existing saved trips remain local and can contain older route geometry—refresh them with the new pack.
+See [the product direction](docs/PRODUCT-DIRECTION.md) for the engineering, design, community and operations decisions. The 0.4.2 road-approach preview requires r3; 0.4.0 requires r2. The source OSM date remains 4 November; the road-graph transformation changed. Existing saved trips remain local and can contain older route geometry—refresh them with the new pack.
 
 The APK pins the three dataset hashes. Another pack version will be rejected rather than silently mixed. GPS can work without internet, but acquiring a fix indoors or after a cold start can be slow; approximate permission needs an available network location provider. [GPS behavior](docs/GPS.md).
 

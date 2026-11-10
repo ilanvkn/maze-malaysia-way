@@ -1,0 +1,184 @@
+[
+  {
+    "name": "oneway-forward",
+    "mode": "QUICK",
+    "maze_meters": 1110.6117911077117,
+    "gh_meters": 1110.425,
+    "agreement": "same directed ways, distance within 2m",
+    "delta_meters": 0.18679110771176965
+  },
+  {
+    "name": "oneway-forward",
+    "mode": "CAREFUL",
+    "maze_meters": 1110.6117911077117,
+    "gh_meters": 1110.425,
+    "agreement": "same directed ways, distance within 2m",
+    "delta_meters": 0.18679110771176965
+  },
+  {
+    "name": "oneway-reverse",
+    "mode": "QUICK",
+    "maze_meters": null,
+    "gh_meters": null,
+    "agreement": "no route"
+  },
+  {
+    "name": "oneway-reverse",
+    "mode": "CAREFUL",
+    "maze_meters": null,
+    "gh_meters": null,
+    "agreement": "no route"
+  },
+  {
+    "name": "divided-turnaround",
+    "mode": "QUICK",
+    "maze_meters": 3353.2978831058444,
+    "gh_meters": 3353.484,
+    "agreement": "same directed ways, distance within 2m",
+    "delta_meters": -0.18611689415547517
+  },
+  {
+    "name": "divided-turnaround",
+    "mode": "CAREFUL",
+    "maze_meters": 3353.2978831058444,
+    "gh_meters": 3353.484,
+    "agreement": "same directed ways, distance within 2m",
+    "delta_meters": -0.18611689415547517
+  },
+  {
+    "name": "divided-forward",
+    "mode": "QUICK",
+    "maze_meters": 1110.6016155559396,
+    "gh_meters": 1110.415,
+    "agreement": "same directed ways, distance within 2m",
+    "delta_meters": 0.18661555593962476
+  },
+  {
+    "name": "divided-forward",
+    "mode": "CAREFUL",
+    "maze_meters": 1110.6016155559396,
+    "gh_meters": 1110.415,
+    "agreement": "same directed ways, distance within 2m",
+    "delta_meters": 0.18661555593962476
+  },
+  {
+    "name": "median-ambiguous",
+    "mode": "QUICK",
+    "maze_meters": null,
+    "gh_meters": 1110.415,
+    "policy_difference": "Maze rejects an ambiguous median; GH chooses south carriageway"
+  },
+  {
+    "name": "median-ambiguous",
+    "mode": "CAREFUL",
+    "maze_meters": null,
+    "gh_meters": 1110.415,
+    "policy_difference": "Maze rejects an ambiguous median; GH chooses south carriageway"
+  },
+  {
+    "name": "barrier-crossing",
+    "mode": "QUICK",
+    "maze_meters": null,
+    "gh_meters": null,
+    "agreement": "no route"
+  },
+  {
+    "name": "barrier-crossing",
+    "mode": "CAREFUL",
+    "maze_meters": null,
+    "gh_meters": null,
+    "agreement": "no route"
+  },
+  {
+    "name": "no-farther-road-fallback",
+    "mode": "QUICK",
+    "maze_meters": null,
+    "gh_meters": null,
+    "agreement": "no route"
+  },
+  {
+    "name": "no-farther-road-fallback",
+    "mode": "CAREFUL",
+    "maze_meters": null,
+    "gh_meters": null,
+    "agreement": "no route"
+  },
+  {
+    "name": "restricted-partial-destination",
+    "mode": "QUICK",
+    "maze_meters": 4443.988595809894,
+    "gh_meters": 4443.875,
+    "agreement": "same directed ways, distance within 2m",
+    "delta_meters": 0.1135958098939227
+  },
+  {
+    "name": "restricted-partial-destination",
+    "mode": "CAREFUL",
+    "maze_meters": 4443.988595809894,
+    "gh_meters": 4443.875,
+    "agreement": "same directed ways, distance within 2m",
+    "delta_meters": 0.1135958098939227
+  },
+  {
+    "name": "reverse-oneway-forward",
+    "mode": "QUICK",
+    "maze_meters": 1110.550230340414,
+    "gh_meters": 1110.364,
+    "agreement": "same directed ways, distance within 2m",
+    "delta_meters": 0.18623034041388564
+  },
+  {
+    "name": "reverse-oneway-forward",
+    "mode": "CAREFUL",
+    "maze_meters": 1110.550230340414,
+    "gh_meters": 1110.364,
+    "agreement": "same directed ways, distance within 2m",
+    "delta_meters": 0.18623034041388564
+  },
+  {
+    "name": "reverse-oneway-illegal",
+    "mode": "QUICK",
+    "maze_meters": null,
+    "gh_meters": null,
+    "agreement": "no route"
+  },
+  {
+    "name": "reverse-oneway-illegal",
+    "mode": "CAREFUL",
+    "maze_meters": null,
+    "gh_meters": null,
+    "agreement": "no route"
+  },
+  {
+    "name": "curved-same-edge",
+    "mode": "QUICK",
+    "maze_meters": 1241.9333277440376,
+    "gh_meters": 1241.766,
+    "agreement": "same directed ways, distance within 2m",
+    "delta_meters": 0.16732774403749318
+  },
+  {
+    "name": "curved-same-edge",
+    "mode": "CAREFUL",
+    "maze_meters": 1241.9333277440376,
+    "gh_meters": 1241.766,
+    "agreement": "same directed ways, distance within 2m",
+    "delta_meters": 0.16732774403749318
+  },
+  {
+    "name": "curved-same-edge-reverse",
+    "mode": "QUICK",
+    "maze_meters": 1241.9333277440376,
+    "gh_meters": 1241.766,
+    "agreement": "same directed ways, distance within 2m",
+    "delta_meters": 0.16732774403749318
+  },
+  {
+    "name": "curved-same-edge-reverse",
+    "mode": "CAREFUL",
+    "maze_meters": 1241.9333277440376,
+    "gh_meters": 1241.766,
+    "agreement": "same directed ways, distance within 2m",
+    "delta_meters": 0.16732774403749318
+  }
+]

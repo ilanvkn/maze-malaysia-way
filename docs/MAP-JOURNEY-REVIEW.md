@@ -19,7 +19,7 @@
 
 The development journey card labels time **Est.** and shows the straight-line gap between the displayed road geometry's final point and the selected place. It keeps **final access unverified** visible in both compact and expanded cards, including saved previews. A zero gap still does not assert permission or a usable entrance. No connector, walking directions or invented road is drawn. This improves disclosure; it does not repair endpoint snapping.
 
-The published [Gate Pilot reviewer APK](https://github.com/ilanvkn/maze-malaysia-way/releases/tag/v0.4.1-gate-pilot.1) is the earlier fixed build. This card change is source-only until a separately qualified APK is published. Existing screenshots do not show or validate it.
+The published [Gate Pilot reviewer APK](https://github.com/ilanvkn/maze-malaysia-way/releases/tag/v0.4.1-gate-pilot.1) is the earlier fixed build. The later [0.4.2 road-approach preview](benchmarks/2026-11-approaches/README.md) includes this card change and separately qualified snapping/road-choice work. The original Gate Pilot APK remains fixed.
 
 ## Next engineering work, in order
 

@@ -1,13 +1,17 @@
-"""Public-landmark comparison, host diagnosis (not Android latency evidence)."""
+"""Historical 0.4.0 junction-routing diagnostic; not the current 0.4.2 segment router."""
 import sqlite3,math,heapq,time,json,sys,urllib.request,urllib.parse,argparse,hashlib
 from pathlib import Path
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('database',type=Path)
 parser.add_argument('--output',type=Path,required=True)
+parser.add_argument('--legacy-junction',action='store_true',help='Explicitly run the historical junction algorithm on a segment-indexed graph')
 args=parser.parse_args()
 case=args.output.parent;case.mkdir(parents=True,exist_ok=True)
 if not args.database.is_file():raise SystemExit("Select an existing reviewed public graph")
 DB=args.database.resolve().as_uri()+"?mode=ro"
+with sqlite3.connect(DB,uri=True) as check_db:
+ if check_db.execute("SELECT 1 FROM sqlite_master WHERE name='segment_cells'").fetchone() and not args.legacy_junction:
+  raise SystemExit("This is the historical junction router. Use the Android ApproachProof for current segment routing, or explicitly pass --legacy-junction for a historical comparison.")
 if args.output.exists():raise SystemExit('Choose a new report path; preserve prior measurements')
 queries=[('KL Sentral–KLCC',(3.1341,101.6869),(3.15785,101.71165)),('KLCC–KL Sentral',(3.15785,101.71165),(3.1341,101.6869)),('Merdeka–Sentral',(3.1478,101.6937),(3.1341,101.6869)),('George Town–Gurney',(5.4141,100.3288),(5.4398311,100.3091867)),('Kuching–Vivacity',(1.5574,110.3500),(1.52674275,110.3692989)),('Kota Kinabalu–Suria',(5.9804,116.0735),(5.98761945,116.07716655)),('KL Sentral–George Town',(3.1341,101.6869),(5.4141,100.3288))]
 def distance(p,q):
