@@ -1,0 +1,30 @@
+{
+  "scope": "gps",
+  "routes": [
+    {
+      "check": "one optimistic sample is not ready",
+      "passed": true
+    },
+    {
+      "check": "alternating divided-road samples keep latest actual point and widen estimate",
+      "estimate_m": 28,
+      "spread_m": 17.791188263141375,
+      "passed": true
+    },
+    {
+      "check": "expired latest sample is not reused",
+      "passed": true
+    },
+    {
+      "check": "consistent samples can finish after minimum span",
+      "passed": true
+    },
+    {
+      "check": "nearest carriageway flips under drift but explicit mapped side does not",
+      "overlapping_ways": 2,
+      "selected_way": 20,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

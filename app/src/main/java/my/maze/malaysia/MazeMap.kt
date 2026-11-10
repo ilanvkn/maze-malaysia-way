@@ -83,7 +83,7 @@ import org.maplibre.android.style.expressions.Expression
         }
     } }},modifier=modifier.semantics{contentDescription=if(choosing&&preview!=null)"Road preview: ${approachDisplayName(preview.choice.name)}. ${routeDistanceLabel(preview.gap)} from place. "+(if(preview.oneWay)"Mapped one-way road." else "Mapped two-way road.") else if(choosing)"Loading road preview" else "Offline Malaysia map"}) }
     LaunchedEffect(map,styleUri,ready,state.accessPoints){if(ready)map?.style?.getSourceAs<GeoJsonSource>("maze-access")?.setGeoJson(FeatureCollection.fromFeatures(state.accessPoints.map{Feature.fromGeometry(Point.fromLngLat(it.point.lon,it.point.lat))}))}
-    LaunchedEffect(map,styleUri,ready,route,state.origin,state.destination,choosing,preview,state.originAccuracyMeters,topInset,bottomInset,rightInset) {
+    LaunchedEffect(map,styleUri,ready,route,state.origin,state.destination,choosing,preview,state.originUncertaintyMeters,topInset,bottomInset,rightInset) {
         val m=map ?: return@LaunchedEffect;if(!ready)return@LaunchedEffect
         val style=m.style ?: return@LaunchedEffect
         val empty=FeatureCollection.fromFeatures(emptyArray<Feature>())
@@ -91,7 +91,7 @@ import org.maplibre.android.style.expressions.Expression
         style.getSourceAs<GeoJsonSource>("maze-approach")?.setGeoJson(line(preview?.points.orEmpty()))
         style.getSourceAs<GeoJsonSource>("maze-road-snap")?.setGeoJson(preview?.let{FeatureCollection.fromFeature(Feature.fromGeometry(Point.fromLngLat(it.snap.lon,it.snap.lat)))} ?: empty)
         style.getSourceAs<GeoJsonSource>("maze-approach-arrows")?.setGeoJson(FeatureCollection.fromFeatures(preview?.arrows.orEmpty().map{Feature.fromGeometry(Point.fromLngLat(it.point.lon,it.point.lat)).apply{addNumberProperty("bearing",it.bearing)}}))
-        val ring=if((!choosing||state.reviewingOrigin)&&state.origin.id=="current")accuracyRing(state.origin.point,state.originAccuracyMeters) else emptyList()
+        val ring=if((!choosing||state.reviewingOrigin)&&state.origin.id=="current")accuracyRing(state.origin.point,state.originUncertaintyMeters) else emptyList()
         style.getSourceAs<GeoJsonSource>("maze-uncertainty")?.setGeoJson(if(ring.isNotEmpty())FeatureCollection.fromFeature(Feature.fromGeometry(Polygon.fromLngLats(listOf(ring.map{Point.fromLngLat(it.lon,it.lat)})))) else empty)
         val coordinates=route?.geometry?.map{Point.fromLngLat(it.lon,it.lat)} ?: emptyList()
         style.getSourceAs<GeoJsonSource>("maze-road")?.setGeoJson(if(coordinates.size>=2)FeatureCollection.fromFeature(Feature.fromGeometry(LineString.fromLngLats(coordinates))) else FeatureCollection.fromFeatures(emptyArray<Feature>()))

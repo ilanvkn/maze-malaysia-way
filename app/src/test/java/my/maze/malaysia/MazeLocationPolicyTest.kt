@@ -24,8 +24,9 @@ class MazeLocationPolicyTest {
         assertTrue(usableFix(good.copy(accuracyMeters = 3000f), now, false))
         assertFalse(usableFix(good.copy(accuracyMeters = 5001f), now, false))
         assertFalse(usableFix(good.copy(point = GeoPoint(51.5, -.1)), now, true))
-        assertTrue(fixDescription(good, true).contains("±20 m"))
-        assertTrue(fixDescription(good.copy(mock = true), false).contains("simulated"))
-        assertTrue(fixDescription(good, false).startsWith("Approximate"))
+        val estimate=FixAssessment(good,1,0.0,20f,false,false)
+        assertTrue(estimateDescription(estimate, true).contains("reported ±20 m"))
+        assertTrue(estimateDescription(estimate.copy(simulated = true), false).contains("simulated"))
+        assertTrue(estimateDescription(estimate, false).startsWith("Approximate"))
     }
 }

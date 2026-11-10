@@ -47,10 +47,11 @@ internal class MazeLocalRouter(private val db:SQLiteDatabase,private val dataAt:
  suspend fun preview(choice:RoadChoice,point:GeoPoint):ApproachPreview {
   coroutineContext.ensureActive();val result=approachPreview(SqliteApproachGraph(db),choice,point);coroutineContext.ensureActive();return result
  }
- suspend fun approaches(point:GeoPoint):List<RoadChoice>{
+ suspend fun approaches(point:GeoPoint):List<RoadChoice> = review(point,null).choices
+ suspend fun review(point:GeoPoint,uncertainty:Float?):RoadReview {
   val context=coroutineContext;val deadline=SystemClock.elapsedRealtime()+15000
   val check={context.ensureActive();if(SystemClock.elapsedRealtime()>=deadline)throw SearchBudgetExceeded()}
-  return roadChoices(SqliteApproachGraph(db,check),point,check)
+  return roadReview(SqliteApproachGraph(db,check),point,uncertainty,check)
  }
  suspend fun route(origin:Place,destination:Place,mode:RouteSearchMode=RouteSearchMode.QUICK,destinationApproach:Long?=null,originApproach:Long?=null):RouteReply {
   val context=coroutineContext;val began=SystemClock.elapsedRealtime()

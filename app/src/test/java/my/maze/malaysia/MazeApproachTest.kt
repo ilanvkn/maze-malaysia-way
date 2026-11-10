@@ -41,6 +41,24 @@ class MazeApproachTest {
   }
   File("build/approach-fixture-results.json").writeText(reports.toString(2))
  }
+ @Test fun noisyMedianDoesNotChooseCarriagewayAndExplicitSideDoesNotFlip(){
+  val g=fixture();val positions=listOf(GeoPoint(3.01002,101.005),GeoPoint(3.01018,101.005),GeoPoint(3.01008,101.005))
+  val first=roadReview(g,positions.first(),30f);val selected=first.choices.first{it.way==20L}
+  assertEquals(2,first.withinEstimate)
+  assertNotEquals(roadChoices(g,positions[0]).first().way,roadChoices(g,positions[1]).first().way)
+  for(point in positions){
+   val review=roadReview(g,point,30f);assertEquals(2,review.withinEstimate)
+   val anchor=roadAnchor(g,point,preferredGeometry=selected.geometry)
+   assertEquals(20L,anchor.geometry.directions.first().way)
+   assertEquals(3.01,anchor.projection.point.lat,.000001)
+  }
+ }
+ @Test fun overlapCountsAreNotHiddenByTheTwentyOptionLimit(){
+  val shapes=(1L..25L).map{id->val points=listOf(GeoPoint(3.0+id*.000001,101.0),GeoPoint(3.0+id*.000001,101.01));RoadGeometry(id,points,"Same mapped name",listOf(DirectedRoad(id*2,id*2+1,id,1110.0,100.0,id,false)))}
+  val graph=object:ApproachGraph by fixture(){override fun nearby(point:GeoPoint)=shapes.asSequence()}
+  val review=roadReview(graph,GeoPoint(3.0,101.005),10f)
+  assertEquals(25,review.withinEstimate);assertEquals(20,review.choices.size);assertTrue(review.limited)
+ }
  @Test fun reverseTravelOnOneWayRemainsRejected(){
   val graph=fixture();val wrapped=object:ApproachGraph by graph{override fun rules(node:Long,incoming:Long)=if(node==2L&&incoming==10L)listOf(TurnRule(10,false,"no_u_turn"))else graph.rules(node,incoming)}
   assertTrue(runCatching{routeApproaches(wrapped,GeoPoint(3.0,101.015),GeoPoint(3.0,101.005),RouteSearchMode.CAREFUL,{0L})}.isFailure)

@@ -25,3 +25,7 @@ One map, one selected road. A teal highlight with a contrasting casing follows t
 Previous/next and the numbered All roads list change only the preview. A separate confirmation commits the loaded selection. Loading clears the previous geometry, blocks confirmation and rejects stale asynchronous results. Cancel preserves an existing route. Camera changes are immediate; preview caching holds at most four entries and display geometry at most 2,048 points.
 
 Day/Night, 48 dp controls, source details and attribution are part of this contract. On constrained screens the descriptive body scrolls while confirmation stays accessible. Landscape panels share the width and reserve map space. Provider-reported uncertainty is shown as an estimate, never a promise of the correct carriageway. When uncertainty exceeds the 350 m road-search area, request a known manual start instead.
+
+## Location uncertainty · 0.4.4
+
+Keep reported accuracy separate from observed spread and the displayed estimate. The dashed circle uses the sample envelope; the ROAD ring always means a selected mapped snap. A GPS start begins with no road highlighted. Name the overlapping-road ambiguity, retain a manual-start exit, and require a road/direction check before using it. Changing the selection clears that check. Use native checked semantics and a 48 dp row; do not rely on teal or arrows alone. Snapshot expiry returns to an actionable journey message, never a silent new road selection.

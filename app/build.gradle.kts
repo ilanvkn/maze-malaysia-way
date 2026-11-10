@@ -3,7 +3,7 @@ android {
  namespace = "my.maze.malaysia"
  compileSdk = 36
  buildToolsVersion = "35.0.0"
- defaultConfig { applicationId = "my.maze.malaysia"; minSdk = 26; targetSdk = 36; versionCode = 9; versionName = "0.4.3-visual-approaches" }
+ defaultConfig { applicationId = "my.maze.malaysia"; minSdk = 26; targetSdk = 36; versionCode = 10; versionName = "0.4.4-gps-review" }
  buildTypes {
  getByName("debug") { buildConfigField("boolean","IS_LAB","false"); buildConfigField("String","GATEWAY_BASE","\"\"") }
  getByName("release") { buildConfigField("boolean","IS_LAB","false"); val gateway=providers.gradleProperty("mazeGatewayBase").orNull ?: ""; require(gateway.isEmpty() || Regex("https://[a-zA-Z0-9.-]+(:[0-9]{1,5})?(/[a-zA-Z0-9_./-]*)?").matches(gateway)) { "mazeGatewayBase must be a credential-free HTTPS base URL" }; buildConfigField("String","GATEWAY_BASE","\""+gateway+"\""); isMinifyEnabled = true; isShrinkResources = true; proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro") }

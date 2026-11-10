@@ -1,0 +1,8 @@
+{
+  "expected_sha256": "689cb78a1ddc81e9fa9a1d1ecc3211bc165e1ec457ff42abd25e63a91672740e",
+  "installed_sha256": "689cb78a1ddc81e9fa9a1d1ecc3211bc165e1ec457ff42abd25e63a91672740e",
+  "matches": true,
+  "predecessor": "18d4a662e173ad94975a5f461b19b9e9ab9f7017d18806df2549c187dd0d432b",
+  "version": "0.4.4-gps-review-qa",
+  "code": 10
+}
