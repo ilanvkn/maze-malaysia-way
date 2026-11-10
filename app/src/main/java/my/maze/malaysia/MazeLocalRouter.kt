@@ -44,6 +44,9 @@ internal class SqliteApproachGraph(private val db:SQLiteDatabase,private val sca
  }
 }
 internal class MazeLocalRouter(private val db:SQLiteDatabase,private val dataAt:Long?=null) {
+ suspend fun preview(choice:RoadChoice,point:GeoPoint):ApproachPreview {
+  coroutineContext.ensureActive();val result=approachPreview(SqliteApproachGraph(db),choice,point);coroutineContext.ensureActive();return result
+ }
  suspend fun approaches(point:GeoPoint):List<RoadChoice>{
   val context=coroutineContext;val deadline=SystemClock.elapsedRealtime()+15000
   val check={context.ensureActive();if(SystemClock.elapsedRealtime()>=deadline)throw SearchBudgetExceeded()}

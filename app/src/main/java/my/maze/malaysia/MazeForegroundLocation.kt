@@ -12,7 +12,7 @@ import android.os.Looper
 import android.os.SystemClock
 
 internal sealed interface LocationOutcome {
-    data class Fix(val point: GeoPoint, val description: String) : LocationOutcome
+    data class Fix(val point: GeoPoint, val description: String, val accuracyMeters:Float) : LocationOutcome
     data class Unavailable(val message: String) : LocationOutcome
 }
 
@@ -56,7 +56,7 @@ internal class MazeForegroundLocation(private val activity: Activity) {
         fun finish(fix: FixCandidate?) {
             if (token != generation) return
             cancel()
-            callback(if (fix != null) LocationOutcome.Fix(fix.point, fixDescription(fix, precise))
+            callback(if (fix != null) LocationOutcome.Fix(fix.point, fixDescription(fix, precise),fix.accuracyMeters!!)
             else LocationOutcome.Unavailable("No recent, usable location fix. Try outdoors with a clear sky view, or choose a start point."))
         }
         // GPS may win with a good fix; a coarse fix is labelled and never called a doorway.

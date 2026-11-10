@@ -59,17 +59,21 @@ internal fun roadSlice(points:List<GeoPoint>,from:Double,to:Double):List<GeoPoin
  }
  return result
 }
+internal fun projectApproach(point:GeoPoint,g:RoadGeometry):RoadProjection {
+ var projection=projectRoad(point,g.points);val road=g.directions.first()
+ // Share routing's sub-metre endpoint normalization with the visual preview.
+ if(projection.fraction*road.meters<=0.5)projection=RoadProjection(g.points.first(),0.0,groundDistance(point,g.points.first()))
+ else if((1-projection.fraction)*road.meters<=0.5)projection=RoadProjection(g.points.last(),1.0,groundDistance(point,g.points.last()))
+ return projection
+}
 internal fun roadAnchor(graph:ApproachGraph,point:GeoPoint,checkpoint:()->Unit={},preferredGeometry:Long?=null):RoadAnchor {
  var nearest=Double.POSITIVE_INFINITY
  val candidates=mutableListOf<RoadAnchor>()
  for(g in graph.nearby(point)){
   checkpoint()
   if(g.directions.isEmpty()||(preferredGeometry!=null&&g.id!=preferredGeometry))continue
-  var projection=projectRoad(point,g.points)
+  val projection=projectApproach(point,g)
   val canonical=g.directions.first()
-  // Normalize sub-metre endpoint rounding on the road itself, preserving node identity.
-  if(projection.fraction*canonical.meters<=0.5)projection=RoadProjection(g.points.first(),0.0,groundDistance(point,g.points.first()))
-  else if((1-projection.fraction)*canonical.meters<=0.5)projection=RoadProjection(g.points.last(),1.0,groundDistance(point,g.points.last()))
   if(projection.gap>350||projection.gap>nearest+1.0)continue
   val src=if(canonical.reverse)canonical.dst else canonical.src;val dst=if(canonical.reverse)canonical.src else canonical.dst
   val node=when {projection.fraction==0.0->src;projection.fraction==1.0->dst;else->null}

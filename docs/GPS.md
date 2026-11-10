@@ -19,3 +19,7 @@ JVM tests cover permission/provider selection, age/future/invalid timestamps, pr
 Before continuous navigation: gather opt-in field trials, define uncertainty-aware snapping, handle permissions/process/lifecycle carefully, and compare matched provider profiles for power and quality. Do not add aggressive smoothing or a Kalman filter merely to make a marker look stable: filtering can introduce lag and put users on a plausible wrong road. Evaluate any filter against labelled traces first.
 
 Primary Android references: [location permissions](https://developer.android.com/develop/sensors-and-location/location/permissions), [LocationManager](https://developer.android.com/reference/android/location/LocationManager), [monotonic location timestamps and accuracy](https://developer.android.com/reference/android/location/Location).
+
+## Visual road review
+
+0.4.3 carries the current fix’s reported uncertainty into the map and road-review UI. The dashed circle is a provider estimate. Starts reporting more than 350 m uncertainty require a known manual starting point instead of presenting a misleading nearby-road list. [Exact emulator/synthetic evidence and limits](benchmarks/2026-11-visual-approaches/README.md).

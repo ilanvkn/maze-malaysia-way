@@ -35,8 +35,39 @@ class ApproachProof:Instrumentation(){
        }
       }
      }finally{db.close();check(file.delete())}
-    }else{check(scope=="country");val pack=MazeLocalPack(targetContext)
+    }else if(scope=="state"){
+     val owner=object:androidx.lifecycle.ViewModelStoreOwner{override val viewModelStore=androidx.lifecycle.ViewModelStore()}
+     lateinit var vm:MazeViewModel
+     runOnMainSync{vm=androidx.lifecycle.ViewModelProvider(owner,object:androidx.lifecycle.ViewModelProvider.Factory{
+      @Suppress("UNCHECKED_CAST") override fun<T:androidx.lifecycle.ViewModel> create(modelClass:Class<T>):T=MazeViewModel(targetContext.applicationContext as android.app.Application,androidx.lifecycle.SavedStateHandle()) as T
+     })[MazeViewModel::class.java]}
+     fun awaitState(test:()->Boolean){val deadline=SystemClock.elapsedRealtime()+10000;while(true){var ok=false;runOnMainSync{ok=test()};if(ok)return;check(SystemClock.elapsedRealtime()<deadline){"State proof timed out"};Thread.sleep(25)}}
+     try{
+      awaitState{vm.state.packReady}
+      runOnMainSync{vm.select(Place("current","Simulated coarse estimate","Synthetic state fixture",landmarks[0].point),true,5000f);vm.findRoutes();check(!vm.state.approachReviewActive&&!vm.state.routeBusy&&vm.state.message!!.contains("uncertainty"))}
+      rows.put(JSONObject().put("check","5000m estimate requires manual start").put("passed",true))
+      runOnMainSync{vm.select(landmarks[0],true);vm.reviewRoadApproach(true);check(vm.state.approachReviewActive&&vm.state.routeBusy);vm.dismissRoadChoices()}
+      Thread.sleep(250);runOnMainSync{check(!vm.state.approachReviewActive&&vm.state.roadChoices.isEmpty()&&!vm.state.routeBusy)}
+      rows.put(JSONObject().put("check","cancel in-flight road loading stays closed").put("passed",true))
+      runOnMainSync{vm.reviewRoadApproach(true)};awaitState{vm.state.roadChoices.size>=2}
+      runOnMainSync{vm.previewRoadApproach(vm.state.roadChoices[0]);vm.previewRoadApproach(vm.state.roadChoices[1]);vm.dismissRoadChoices()}
+      Thread.sleep(250);runOnMainSync{check(vm.state.approachPreview==null&&vm.state.previewChoice==null&&!vm.state.approachReviewActive)}
+      rows.put(JSONObject().put("check","late preview cannot reopen cancelled chooser").put("passed",true))
+     }finally{runOnMainSync{owner.viewModelStore.clear()}}
+    }else{check(scope in listOf("country","previews"));val pack=MazeLocalPack(targetContext)
      try{pack.open();report.put("pack",pack.summary)
+      if(scope=="previews"){
+       val router=MazeLocalRouter(pack.roads)
+       for(place in listOf(landmarks[0],landmarks[1]))for(choice in router.approaches(place.point)){
+        val began=SystemClock.elapsedRealtime();val preview=router.preview(choice,place.point)
+        val g=SqliteApproachGraph(pack.roads).geometry(choice.geometry)
+        check(preview.points.size in 2..2048&&preview.points.all{projectRoad(it,g.points).gap<.01})
+        check(kotlin.math.abs(preview.gap-groundDistance(place.point,preview.snap))<.01)
+        check(preview.arrows.all{it.bearing.isFinite()&&it.bearing in 0.0..360.0&&projectRoad(it.point,g.points).gap<.01})
+        check(preview.oneWay==(g.directions.map{it.reverse}.distinct().size==1))
+        rows.put(JSONObject().put("place",place.name).put("way",choice.way).put("geometry",choice.geometry).put("name",choice.name).put("gap",preview.gap).put("vertices",preview.points.size).put("arrows",preview.arrows.size).put("one_way",preview.oneWay).put("elapsed_ms",SystemClock.elapsedRealtime()-began))
+       }
+      }else{
       val pairs=listOf(landmarks[0] to landmarks[1],landmarks[1] to landmarks[0],landmarks[2] to landmarks[0],landmarks[5] to Place("gurney","Gurney","Penang",GeoPoint(5.4398311,100.3091867)),landmarks[6] to Place("viva","Vivacity","Kuching",GeoPoint(1.52674275,110.3692989)),landmarks[7] to Place("suria","Suria","Sabah",GeoPoint(5.98761945,116.07716655)),landmarks[0] to landmarks[5])
       val declared=listOf(754190230L to 754168118L,754168118L to 754190229L,24581627L to 754190229L,31285089L to 579785022L,637964718L to 129145719L,176131728L to 1344916159L,754190230L to 787243333L)
       for(mode in RouteSearchMode.entries)for((index,pair) in pairs.take(if(mode==RouteSearchMode.CAREFUL)6 else 7).withIndex()){
@@ -52,6 +83,7 @@ class ApproachProof:Instrumentation(){
        if(result.isFailure){row.put("error",result.exceptionOrNull()!!.message);continue}
        val route=result.getOrThrow();row.put("elapsed_ms",SystemClock.elapsedRealtime()-began).put("meters",route.meters).put("seconds",route.seconds).put("start",JSONArray(listOf(route.geometry.first().lat,route.geometry.first().lon))).put("end",JSONArray(listOf(route.geometry.last().lat,route.geometry.last().lon))).put("summary",route.summary).put("vertices",route.geometry.size)
        if(a.id=="sentral"&&b.id=="klcc")check(route.meters<8500)
+      }
       }
      }finally{pack.close()}
     }
