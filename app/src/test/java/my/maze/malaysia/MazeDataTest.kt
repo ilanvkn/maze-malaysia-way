@@ -2,6 +2,16 @@ package my.maze.malaysia
 import org.junit.Test
 import org.junit.Assert.*
 class MazeDataTest {
+ @Test fun endpointGapUsesDisplayedRoadEndAndDoesNotPromiseAccess(){
+  val end=GeoPoint(3.15,101.70)
+  val place=Place("test","Synthetic place","Test",GeoPoint(3.151,101.70))
+  val route=RoadRoute(listOf(GeoPoint(3.0,101.0),end),emptyList(),2000.0,180.0,"Test")
+  val label=routeEndGapLabel(route,place)!!
+  assertTrue(label.startsWith("Road ends 111 m from place"))
+  assertTrue(label.contains("final access unverified"))
+  assertTrue(routeEndGapLabel(route,place.copy(point=end))!!.startsWith("Road ends 0 m"))
+  assertNull(routeEndGapLabel(route.copy(geometry=emptyList()),place))
+ }
  @Test fun searchHandlesCaseWhitespaceAndAlias(){assertEquals("klcc",localSearch(" KLCC ").single().id);assertTrue(localSearch("sarawak").any{it.id=="kuching"});assertTrue(localSearch("zz-913-no-place").isEmpty())}
  @Test fun invalidCoordinatesAreRejected(){for(pair in listOf(Double.NaN to 101.0,3.0 to Double.POSITIVE_INFINITY,89.0 to 101.0)){assertTrue(runCatching{GeoPoint(pair.first,pair.second)}.isFailure)}}
  @Test fun routesRequireRoadGeometryAndServiceSuccess(){for(json in listOf("""{"code":"NoRoute","routes":[]}""","""{"code":"Ok","routes":[{"distance":100,"duration":20,"geometry":{"coordinates":[[101,3]]},"legs":[]}]}""")){assertTrue(runCatching{parseRoutes(json)}.isFailure)}}

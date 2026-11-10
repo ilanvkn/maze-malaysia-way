@@ -75,3 +75,9 @@ fun parsePlaces(json: String): List<Place> {
 }
 fun routeDistanceLabel(meters: Double) = if(meters>=1000) String.format(java.util.Locale.ROOT,"%.1f km",meters/1000) else meters.roundToInt().toString()+" m"
 fun routeMinutes(seconds: Double) = max(1,ceil(seconds/60).toInt())
+
+/** Straight-line gap from the displayed road endpoint, never a walkable connector. */
+internal fun routeEndGapLabel(route: RoadRoute, destination: Place): String? =
+    route.geometry.lastOrNull()?.let { end ->
+        "Road ends ${routeDistanceLabel(groundDistance(end, destination.point))} from place · final access unverified"
+    }

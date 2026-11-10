@@ -30,7 +30,9 @@ Actual 0.4.0 publishable minified lab APK screenshots in airplane mode, not mock
 
 ## Try it
 
-Download the **developer-preview APK**, the matching **Malaysia offline pack ZIP**, and their checksums from the [release page](https://github.com/ilanvkn/maze-malaysia-way/releases). The APK is locally debug-signed for development, non-debuggable, and not a Play Store release. Android 8/API 26 or newer is required. Independent physical-device testing is still needed.
+**Gate Pilot usability test:** [download the separate reviewer APK](https://github.com/ilanvkn/maze-malaysia-way/releases/download/v0.4.1-gate-pilot.1/Maze-Gate-Pilot-0.4.1-qa.apk) · [checksums and instructions](https://github.com/ilanvkn/maze-malaysia-way/releases/tag/v0.4.1-gate-pilot.1). Open **Try gate pilot → Try test scenarios**; no map download is needed. All scenarios are fictional and cannot be routed to. [Findings](docs/GATE-PILOT-RESULTS.md) · [comparative journey review and next tests](docs/MAP-JOURNEY-REVIEW.md).
+
+For the full map preview, download the **developer-preview APK**, the matching **Malaysia offline pack ZIP**, and their checksums from the [0.4.0 community release](https://github.com/ilanvkn/maze-malaysia-way/releases/tag/v0.4.0-community.1). The APK is locally debug-signed for development, non-debuggable, and not a Play Store release. Android 8/API 26 or newer is required. Independent physical-device testing is still needed.
 
 1. Install the APK on your own non-production test device. Maze opens a guided setup screen; no account or GPS permission is needed.
 2. Keep the country ZIP intact. Allow at least 3 GB of free space for the ZIP, installed data and staging; more may be needed while updating.
