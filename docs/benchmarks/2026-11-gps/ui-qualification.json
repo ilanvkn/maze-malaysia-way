@@ -1,0 +1,85 @@
+{
+  "apk_sha256": "8b49eac779fd51fb55a454ac57d3e38a4cab0f95c71a6f1f6c783bc7dc3472b8",
+  "provider": {
+    "apk_sha256": "8b49eac779fd51fb55a454ac57d3e38a4cab0f95c71a6f1f6c783bc7dc3472b8",
+    "cases": [
+      {
+        "case": "no fresh samples",
+        "passed": true
+      },
+      {
+        "case": "optimistic first sample then alternating60m drift; no default road; acknowledgment and reset; explicit handoff",
+        "injections": 21,
+        "passed": true
+      },
+      {
+        "case": "250m reported radius plus200m drift requires manual start",
+        "injections": 24,
+        "passed": true
+      },
+      {
+        "case": "background cancels foreground request; late data does not set start",
+        "passed": true
+      },
+      {
+        "case": "fresh consistent retry recovers independently",
+        "passed": true
+      },
+      {
+        "case": "night estimate and road review visible",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "physical_GNSS": false
+  },
+  "visual_flows": {
+    "same_apk": "apk-identity-publish.json",
+    "preview_does_not_confirm": true,
+    "rapid_selection_ends_at_option6": true,
+    "all_roads_and_same_names": true,
+    "two_way_preview": true,
+    "cancel_before_route": true,
+    "explicit_start_and_arrival": true,
+    "kl_label": "6.3 km",
+    "cancel_edit_keeps_route": true,
+    "day": true,
+    "night": true,
+    "remaining": "Actual map pixels need independent viewing; constrained viewport/GPS checks separate"
+  },
+  "constrained": {
+    "portrait": {
+      "size": [
+        360,
+        640
+      ],
+      "font_scale": "2.0",
+      "controls_inside_viewport": true
+    },
+    "landscape": {
+      "size": [
+        640,
+        360
+      ],
+      "font_scale": "2.0",
+      "controls_inside_viewport": true
+    }
+  },
+  "independent_pixel_review": {
+    "completed": true,
+    "screens": [
+      "gps-no-default-road",
+      "gps-road-checked",
+      "gps-broad-manual",
+      "gps-consistent-retry",
+      "gps-night-review",
+      "visual-route-day",
+      "visual-small-200-landscape"
+    ],
+    "observed": "Distinct dashed estimate and ROAD snap, actual directed line, separate A/B markers, disabled/checked confirmation, manual broad-estimate message, real route, constrained controls"
+  },
+  "limitations": [
+    "640x360 at200% text truncates/wraps the place header; controls/map remain visible",
+    "Full screen-reader and physical low-end/GNSS/battery qualification not performed"
+  ]
+}

@@ -62,11 +62,12 @@ class MainActivity:ComponentActivity() {
     }
 
     private fun findLocation() {
-        model?.message("Finding your location… GPS may take longer outdoors without a network.")
+        model?.invalidateLocationSnapshot()
+        model?.message("Checking location samples… up to 20 seconds. You can choose a known start manually.")
         foregroundLocation.request { result ->
             when (result) {
                 is LocationOutcome.Fix -> model?.select(
-                    Place("current", "Current location", result.description, result.point), origin = true, accuracyMeters=result.accuracyMeters
+                    Place("current", "Current location", result.description, result.point), origin = true, uncertaintyMeters=result.uncertaintyMeters,fixElapsedNanos=result.elapsedNanos
                 )
                 is LocationOutcome.Unavailable -> model?.message(result.message)
             }
@@ -123,7 +124,7 @@ class MainActivity:ComponentActivity() {
     }
     if(s.origin.id=="current")Text(s.origin.area,style=MaterialTheme.typography.bodySmall,color=colors.onSurfaceVariant)
     if(s.routeBusy){LinearProgressIndicator(Modifier.fillMaxWidth().padding(vertical=6.dp));Text("Long offline trips can take up to 45 seconds.",style=MaterialTheme.typography.bodySmall);TextButton(onClick=model::cancelRoute){Text("Cancel route")}}
-    if(s.origin.id=="current"&&needsManualRoadStart(s.originAccuracyMeters))TextButton(onClick={model.query("");sheet="origin"}){Text("Choose start manually")}
+    if(s.origin.id=="current")TextButton(onClick={model.query("");sheet="origin"}){Text("Choose start manually")}
     if(s.message!=null)Surface(color=colors.secondaryContainer,shape=RoundedCornerShape(12.dp),modifier=Modifier.padding(vertical=6.dp).semantics{liveRegion=LiveRegionMode.Polite}){Text(s.message,Modifier.padding(12.dp),style=MaterialTheme.typography.bodySmall)}
     if(expanded) {
      FlowRow(horizontalArrangement=Arrangement.spacedBy(4.dp)) {TextButton(onClick={model.query("");sheet="origin"}){Text("Change start")};TextButton(onClick={explain=true}){Text("Locate me")};TextButton(onClick={sheet="offline"}){Text("Map area")} }

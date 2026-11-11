@@ -1,0 +1,319 @@
+{
+  "scope": "country",
+  "routes": [
+    {
+      "from": "KL Sentral",
+      "to": "Petronas Twin Towers",
+      "mode": "QUICK",
+      "explicit_test_approach": "Persiaran Petronas",
+      "approach_way": 754168118,
+      "approach_gap": 89.91976651547182,
+      "start_approach": "Jalan Stesen Sentral",
+      "start_way": 754190230,
+      "start_gap": 35.69098760962833,
+      "elapsed_ms": 942,
+      "meters": 6304.559230611794,
+      "seconds": 587.0080542376621,
+      "start": [
+        3.1338229187996784,
+        101.68706226765056
+      ],
+      "end": [
+        3.1573495864868164,
+        101.71101379394531
+      ],
+      "summary": "Quick preview \u00b7 not guaranteed fastest \u00b7 36/90 m segment snap \u00b7 final access unverified",
+      "vertices": 385
+    },
+    {
+      "from": "Petronas Twin Towers",
+      "to": "KL Sentral",
+      "mode": "QUICK",
+      "explicit_test_approach": "Jalan Stesen Sentral",
+      "approach_way": 754190229,
+      "approach_gap": 47.956601332554406,
+      "start_approach": "Persiaran Petronas",
+      "start_way": 754168118,
+      "start_gap": 89.91976651547182,
+      "elapsed_ms": 457,
+      "meters": 7073.147757360839,
+      "seconds": 627.0389609125581,
+      "start": [
+        3.1573495864868164,
+        101.71101379394531
+      ],
+      "end": [
+        3.1336774826049805,
+        101.68681335449219
+      ],
+      "summary": "Quick preview \u00b7 not guaranteed fastest \u00b7 90/48 m segment snap \u00b7 final access unverified",
+      "vertices": 306
+    },
+    {
+      "from": "Dataran Merdeka",
+      "to": "KL Sentral",
+      "mode": "QUICK",
+      "explicit_test_approach": "Jalan Stesen Sentral",
+      "approach_way": 754190229,
+      "approach_gap": 47.956601332554406,
+      "start_approach": "Jalan Kinabalu",
+      "start_way": 24581627,
+      "start_gap": 150.88770005432397,
+      "elapsed_ms": 211,
+      "meters": 2598.5159023772785,
+      "seconds": 202.12851731467566,
+      "start": [
+        3.147590524891643,
+        101.69235727440142
+      ],
+      "end": [
+        3.1336774826049805,
+        101.68681335449219
+      ],
+      "summary": "Quick preview \u00b7 not guaranteed fastest \u00b7 151/48 m segment snap \u00b7 final access unverified",
+      "vertices": 141
+    },
+    {
+      "from": "George Town",
+      "to": "Gurney",
+      "mode": "QUICK",
+      "explicit_test_approach": "Persiaran Gurney",
+      "approach_way": 579785022,
+      "approach_gap": 17.776915137757797,
+      "start_approach": "Jalan Dato Keramat",
+      "start_way": 31285089,
+      "start_gap": 10.602343741168431,
+      "elapsed_ms": 488,
+      "meters": 5216.250502951821,
+      "seconds": 388.13556476885253,
+      "start": [
+        5.414007015897181,
+        100.32877880043898
+      ],
+      "end": [
+        5.439914281534168,
+        100.30932384522504
+      ],
+      "summary": "Quick preview \u00b7 not guaranteed fastest \u00b7 11/18 m segment snap \u00b7 final access unverified",
+      "vertices": 260
+    },
+    {
+      "from": "Kuching Waterfront",
+      "to": "Vivacity",
+      "mode": "QUICK",
+      "explicit_test_approach": "Jalan Wan Alwi",
+      "approach_way": 129145719,
+      "approach_gap": 79.68185534516164,
+      "start_approach": "service",
+      "start_way": 637964718,
+      "start_gap": 28.35844326007473,
+      "elapsed_ms": 456,
+      "meters": 6116.405014086092,
+      "seconds": 409.2280071842348,
+      "start": [
+        1.557148288601648,
+        110.34995895420747
+      ],
+      "end": [
+        1.527457913522692,
+        110.36934420588337
+      ],
+      "summary": "Quick preview \u00b7 not guaranteed fastest \u00b7 28/80 m segment snap \u00b7 final access unverified",
+      "vertices": 224
+    },
+    {
+      "from": "Kota Kinabalu",
+      "to": "Suria",
+      "mode": "QUICK",
+      "explicit_test_approach": "service",
+      "approach_way": 1344916159,
+      "approach_gap": 68.92791881384038,
+      "start_approach": "Lorong Sinsuran 2",
+      "start_way": 176131728,
+      "start_gap": 1.6678518534605076,
+      "elapsed_ms": 236,
+      "meters": 1659.3656980662947,
+      "seconds": 153.1391427019289,
+      "start": [
+        5.980386257171631,
+        116.07349395751953
+      ],
+      "end": [
+        5.987918265511903,
+        116.07662046380646
+      ],
+      "summary": "Quick preview \u00b7 not guaranteed fastest \u00b7 2/69 m segment snap \u00b7 final access unverified",
+      "vertices": 73
+    },
+    {
+      "from": "KL Sentral",
+      "to": "George Town",
+      "mode": "QUICK",
+      "explicit_test_approach": "Jalan Magazine",
+      "approach_way": 787243333,
+      "approach_gap": 13.317325404016465,
+      "start_approach": "Jalan Stesen Sentral",
+      "start_way": 754190230,
+      "start_gap": 35.69098760962833,
+      "elapsed_ms": 7686,
+      "meters": 398365.1181273489,
+      "seconds": 21546.744936683328,
+      "start": [
+        3.1338229187996784,
+        101.68706226765056
+      ],
+      "end": [
+        5.4139909744262695,
+        100.32884979248047
+      ],
+      "summary": "Quick preview \u00b7 not guaranteed fastest \u00b7 36/13 m segment snap \u00b7 final access unverified",
+      "vertices": 6832
+    },
+    {
+      "from": "KL Sentral",
+      "to": "Petronas Twin Towers",
+      "mode": "CAREFUL",
+      "explicit_test_approach": "Persiaran Petronas",
+      "approach_way": 754168118,
+      "approach_gap": 89.91976651547182,
+      "start_approach": "Jalan Stesen Sentral",
+      "start_way": 754190230,
+      "start_gap": 35.69098760962833,
+      "elapsed_ms": 638,
+      "meters": 6304.559230611794,
+      "seconds": 587.0080542376621,
+      "start": [
+        3.1338229187996784,
+        101.68706226765056
+      ],
+      "end": [
+        3.1573495864868164,
+        101.71101379394531
+      ],
+      "summary": "Careful A* \u00b7 may take longer \u00b7 not guaranteed fastest \u00b7 36/90 m segment snap \u00b7 final access unverified",
+      "vertices": 385
+    },
+    {
+      "from": "Petronas Twin Towers",
+      "to": "KL Sentral",
+      "mode": "CAREFUL",
+      "explicit_test_approach": "Jalan Stesen Sentral",
+      "approach_way": 754190229,
+      "approach_gap": 47.956601332554406,
+      "start_approach": "Persiaran Petronas",
+      "start_way": 754168118,
+      "start_gap": 89.91976651547182,
+      "elapsed_ms": 552,
+      "meters": 7073.147757360839,
+      "seconds": 627.0389609125581,
+      "start": [
+        3.1573495864868164,
+        101.71101379394531
+      ],
+      "end": [
+        3.1336774826049805,
+        101.68681335449219
+      ],
+      "summary": "Careful A* \u00b7 may take longer \u00b7 not guaranteed fastest \u00b7 90/48 m segment snap \u00b7 final access unverified",
+      "vertices": 306
+    },
+    {
+      "from": "Dataran Merdeka",
+      "to": "KL Sentral",
+      "mode": "CAREFUL",
+      "explicit_test_approach": "Jalan Stesen Sentral",
+      "approach_way": 754190229,
+      "approach_gap": 47.956601332554406,
+      "start_approach": "Jalan Kinabalu",
+      "start_way": 24581627,
+      "start_gap": 150.88770005432397,
+      "elapsed_ms": 50,
+      "meters": 2598.5159023772785,
+      "seconds": 202.12851731467566,
+      "start": [
+        3.147590524891643,
+        101.69235727440142
+      ],
+      "end": [
+        3.1336774826049805,
+        101.68681335449219
+      ],
+      "summary": "Careful A* \u00b7 may take longer \u00b7 not guaranteed fastest \u00b7 151/48 m segment snap \u00b7 final access unverified",
+      "vertices": 141
+    },
+    {
+      "from": "George Town",
+      "to": "Gurney",
+      "mode": "CAREFUL",
+      "explicit_test_approach": "Persiaran Gurney",
+      "approach_way": 579785022,
+      "approach_gap": 17.776915137757797,
+      "start_approach": "Jalan Dato Keramat",
+      "start_way": 31285089,
+      "start_gap": 10.602343741168431,
+      "elapsed_ms": 390,
+      "meters": 5216.250502951821,
+      "seconds": 388.13556476885253,
+      "start": [
+        5.414007015897181,
+        100.32877880043898
+      ],
+      "end": [
+        5.439914281534168,
+        100.30932384522504
+      ],
+      "summary": "Careful A* \u00b7 may take longer \u00b7 not guaranteed fastest \u00b7 11/18 m segment snap \u00b7 final access unverified",
+      "vertices": 260
+    },
+    {
+      "from": "Kuching Waterfront",
+      "to": "Vivacity",
+      "mode": "CAREFUL",
+      "explicit_test_approach": "Jalan Wan Alwi",
+      "approach_way": 129145719,
+      "approach_gap": 79.68185534516164,
+      "start_approach": "service",
+      "start_way": 637964718,
+      "start_gap": 28.35844326007473,
+      "elapsed_ms": 329,
+      "meters": 6116.405014086092,
+      "seconds": 409.2280071842348,
+      "start": [
+        1.557148288601648,
+        110.34995895420747
+      ],
+      "end": [
+        1.527457913522692,
+        110.36934420588337
+      ],
+      "summary": "Careful A* \u00b7 may take longer \u00b7 not guaranteed fastest \u00b7 28/80 m segment snap \u00b7 final access unverified",
+      "vertices": 224
+    },
+    {
+      "from": "Kota Kinabalu",
+      "to": "Suria",
+      "mode": "CAREFUL",
+      "explicit_test_approach": "service",
+      "approach_way": 1344916159,
+      "approach_gap": 68.92791881384038,
+      "start_approach": "Lorong Sinsuran 2",
+      "start_way": 176131728,
+      "start_gap": 1.6678518534605076,
+      "elapsed_ms": 36,
+      "meters": 1659.3656980662947,
+      "seconds": 153.1391427019289,
+      "start": [
+        5.980386257171631,
+        116.07349395751953
+      ],
+      "end": [
+        5.987918265511903,
+        116.07662046380646
+      ],
+      "summary": "Careful A* \u00b7 may take longer \u00b7 not guaranteed fastest \u00b7 2/69 m segment snap \u00b7 final access unverified",
+      "vertices": 73
+    }
+  ],
+  "pack": "Malaysia + Singapore/Brunei \u00b7 OSM 4 Nov 2026 \u00b7 directed segment index r3",
+  "passed": true
+}

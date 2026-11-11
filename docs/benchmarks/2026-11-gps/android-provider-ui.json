@@ -1,0 +1,33 @@
+{
+  "apk_sha256": "8b49eac779fd51fb55a454ac57d3e38a4cab0f95c71a6f1f6c783bc7dc3472b8",
+  "cases": [
+    {
+      "case": "no fresh samples",
+      "passed": true
+    },
+    {
+      "case": "optimistic first sample then alternating60m drift; no default road; acknowledgment and reset; explicit handoff",
+      "injections": 21,
+      "passed": true
+    },
+    {
+      "case": "250m reported radius plus200m drift requires manual start",
+      "injections": 24,
+      "passed": true
+    },
+    {
+      "case": "background cancels foreground request; late data does not set start",
+      "passed": true
+    },
+    {
+      "case": "fresh consistent retry recovers independently",
+      "passed": true
+    },
+    {
+      "case": "night estimate and road review visible",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "physical_GNSS": false
+}

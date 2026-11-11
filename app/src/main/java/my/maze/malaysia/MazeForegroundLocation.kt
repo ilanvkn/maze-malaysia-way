@@ -12,7 +12,7 @@ import android.os.Looper
 import android.os.SystemClock
 
 internal sealed interface LocationOutcome {
-    data class Fix(val point: GeoPoint, val description: String, val accuracyMeters:Float) : LocationOutcome
+    data class Fix(val point: GeoPoint, val description: String, val uncertaintyMeters:Float, val elapsedNanos:Long) : LocationOutcome
     data class Unavailable(val message: String) : LocationOutcome
 }
 
@@ -52,24 +52,23 @@ internal class MazeForegroundLocation(private val activity: Activity) {
             else "Location services are off or unavailable. Enable them in Android settings or choose a start point."))
             return
         }
-        var best: FixCandidate? = null
-        fun finish(fix: FixCandidate?) {
+        val window = FixWindow(precise, SystemClock.elapsedRealtimeNanos())
+        fun finish() {
             if (token != generation) return
+            val estimate = window.assessment(SystemClock.elapsedRealtimeNanos())
             cancel()
-            callback(if (fix != null) LocationOutcome.Fix(fix.point, fixDescription(fix, precise),fix.accuracyMeters!!)
-            else LocationOutcome.Unavailable("No recent, usable location fix. Try outdoors with a clear sky view, or choose a start point."))
+            callback(if (estimate != null) LocationOutcome.Fix(estimate.fix.point, estimateDescription(estimate, precise), estimate.uncertaintyMeters, estimate.fix.elapsedNanos)
+            else LocationOutcome.Unavailable("No recent, usable location estimate. Samples may be missing or disagree. Try again outdoors, or choose a known start manually."))
         }
-        // GPS may win with a good fix; a coarse fix is labelled and never called a doorway.
         fun accept(location: Location) {
             if (token != generation) return
             val point = runCatching { GeoPoint(location.latitude, location.longitude) }.getOrNull() ?: return
             val fix = FixCandidate(point, if (location.hasAccuracy()) location.accuracy else null,
                 location.elapsedRealtimeNanos, location.provider ?: "unknown", location.isFromMockProvider)
-            if (!usableFix(fix, SystemClock.elapsedRealtimeNanos(), precise)) return
-            if (best == null || fix.accuracyMeters!! < best!!.accuracyMeters!!) best = fix
-            if (!precise || fix.accuracyMeters!! <= 50f) finish(best)
+            val now = SystemClock.elapsedRealtimeNanos()
+            if (window.offer(fix, now) && window.ready(now)) finish()
         }
-        deadline = Runnable { finish(best) }.also { handler.postDelayed(it, 20_000) }
+        deadline = Runnable { finish() }.also { handler.postDelayed(it, 20_000) }
         for (provider in providers) {
             val listener = object : LocationListener {
                 override fun onLocationChanged(location: Location) = accept(location)
@@ -79,7 +78,7 @@ internal class MazeForegroundLocation(private val activity: Activity) {
                 override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
             }
             try {
-                // Updates are bounded by the 20 s session and cancelled at the first good fix/onStop.
+                // Updates are bounded by the 20 s session and cancelled after consistent samples/onStop.
                 manager.requestLocationUpdates(provider, 1000L, 0f, listener, Looper.getMainLooper())
                 listeners.add(listener)
             } catch (_: SecurityException) {
@@ -88,6 +87,6 @@ internal class MazeForegroundLocation(private val activity: Activity) {
                 // Provider disappeared. Another selected provider may still work.
             }
         }
-        if (listeners.isEmpty()) finish(null)
+        if (listeners.isEmpty()) finish()
     }
 }

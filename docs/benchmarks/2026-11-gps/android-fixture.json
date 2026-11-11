@@ -1,0 +1,178 @@
+{
+  "scope": "fixture",
+  "routes": [
+    {
+      "name": "oneway-forward",
+      "mode": "QUICK",
+      "elapsed_ms": 1,
+      "meters": 1110.6117911077117,
+      "gh_meters": 1110.425,
+      "vertices": 2
+    },
+    {
+      "name": "oneway-forward",
+      "mode": "CAREFUL",
+      "elapsed_ms": 1,
+      "meters": 1110.6117911077117,
+      "gh_meters": 1110.425,
+      "vertices": 2
+    },
+    {
+      "name": "oneway-reverse",
+      "mode": "QUICK",
+      "elapsed_ms": 0,
+      "expected_rejection": "No supported driving route connects the nearest road approaches. A barrier, one-way road, sea crossing or excluded access may prevent this trip. Choose road points; Maze will not move them to another road."
+    },
+    {
+      "name": "oneway-reverse",
+      "mode": "CAREFUL",
+      "elapsed_ms": 1,
+      "expected_rejection": "No supported driving route connects the nearest road approaches. A barrier, one-way road, sea crossing or excluded access may prevent this trip. Choose road points; Maze will not move them to another road."
+    },
+    {
+      "name": "divided-turnaround",
+      "mode": "QUICK",
+      "elapsed_ms": 0,
+      "meters": 3353.2978831058444,
+      "gh_meters": 3353.484,
+      "vertices": 4
+    },
+    {
+      "name": "divided-turnaround",
+      "mode": "CAREFUL",
+      "elapsed_ms": 1,
+      "meters": 3353.2978831058444,
+      "gh_meters": 3353.484,
+      "vertices": 4
+    },
+    {
+      "name": "divided-forward",
+      "mode": "QUICK",
+      "elapsed_ms": 0,
+      "meters": 1110.6016155559396,
+      "gh_meters": 1110.415,
+      "vertices": 2
+    },
+    {
+      "name": "divided-forward",
+      "mode": "CAREFUL",
+      "elapsed_ms": 0,
+      "meters": 1110.6016155559396,
+      "gh_meters": 1110.415,
+      "vertices": 2
+    },
+    {
+      "name": "median-ambiguous",
+      "mode": "QUICK",
+      "elapsed_ms": 0,
+      "expected_rejection": "Ambiguous nearby road approaches. Choose a point clearly on the intended road; Maze cannot infer a crossing or entry permission."
+    },
+    {
+      "name": "median-ambiguous",
+      "mode": "CAREFUL",
+      "elapsed_ms": 0,
+      "expected_rejection": "Ambiguous nearby road approaches. Choose a point clearly on the intended road; Maze cannot infer a crossing or entry permission."
+    },
+    {
+      "name": "barrier-crossing",
+      "mode": "QUICK",
+      "elapsed_ms": 1,
+      "expected_rejection": "No supported driving route connects the nearest road approaches. A barrier, one-way road, sea crossing or excluded access may prevent this trip. Choose road points; Maze will not move them to another road."
+    },
+    {
+      "name": "barrier-crossing",
+      "mode": "CAREFUL",
+      "elapsed_ms": 0,
+      "expected_rejection": "No supported driving route connects the nearest road approaches. A barrier, one-way road, sea crossing or excluded access may prevent this trip. Choose road points; Maze will not move them to another road."
+    },
+    {
+      "name": "no-farther-road-fallback",
+      "mode": "QUICK",
+      "elapsed_ms": 0,
+      "expected_rejection": "No supported driving route connects the nearest road approaches. A barrier, one-way road, sea crossing or excluded access may prevent this trip. Choose road points; Maze will not move them to another road."
+    },
+    {
+      "name": "no-farther-road-fallback",
+      "mode": "CAREFUL",
+      "elapsed_ms": 1,
+      "expected_rejection": "No supported driving route connects the nearest road approaches. A barrier, one-way road, sea crossing or excluded access may prevent this trip. Choose road points; Maze will not move them to another road."
+    },
+    {
+      "name": "restricted-partial-destination",
+      "mode": "QUICK",
+      "elapsed_ms": 0,
+      "meters": 4443.988595809894,
+      "gh_meters": 4443.875,
+      "vertices": 6
+    },
+    {
+      "name": "restricted-partial-destination",
+      "mode": "CAREFUL",
+      "elapsed_ms": 1,
+      "meters": 4443.988595809894,
+      "gh_meters": 4443.875,
+      "vertices": 6
+    },
+    {
+      "name": "reverse-oneway-forward",
+      "mode": "QUICK",
+      "elapsed_ms": 0,
+      "meters": 1110.550230340414,
+      "gh_meters": 1110.364,
+      "vertices": 2
+    },
+    {
+      "name": "reverse-oneway-forward",
+      "mode": "CAREFUL",
+      "elapsed_ms": 1,
+      "meters": 1110.550230340414,
+      "gh_meters": 1110.364,
+      "vertices": 2
+    },
+    {
+      "name": "reverse-oneway-illegal",
+      "mode": "QUICK",
+      "elapsed_ms": 0,
+      "expected_rejection": "No supported driving route connects the nearest road approaches. A barrier, one-way road, sea crossing or excluded access may prevent this trip. Choose road points; Maze will not move them to another road."
+    },
+    {
+      "name": "reverse-oneway-illegal",
+      "mode": "CAREFUL",
+      "elapsed_ms": 0,
+      "expected_rejection": "No supported driving route connects the nearest road approaches. A barrier, one-way road, sea crossing or excluded access may prevent this trip. Choose road points; Maze will not move them to another road."
+    },
+    {
+      "name": "curved-same-edge",
+      "mode": "QUICK",
+      "elapsed_ms": 1,
+      "meters": 1241.9333277440376,
+      "gh_meters": 1241.766,
+      "vertices": 3
+    },
+    {
+      "name": "curved-same-edge",
+      "mode": "CAREFUL",
+      "elapsed_ms": 0,
+      "meters": 1241.9333277440376,
+      "gh_meters": 1241.766,
+      "vertices": 3
+    },
+    {
+      "name": "curved-same-edge-reverse",
+      "mode": "QUICK",
+      "elapsed_ms": 1,
+      "meters": 1241.9333277440376,
+      "gh_meters": 1241.766,
+      "vertices": 3
+    },
+    {
+      "name": "curved-same-edge-reverse",
+      "mode": "CAREFUL",
+      "elapsed_ms": 1,
+      "meters": 1241.9333277440376,
+      "gh_meters": 1241.766,
+      "vertices": 3
+    }
+  ],
+  "passed": true
+}

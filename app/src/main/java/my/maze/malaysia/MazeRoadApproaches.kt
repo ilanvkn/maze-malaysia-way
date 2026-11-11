@@ -142,15 +142,20 @@ internal fun approachRoadRoute(graph:ApproachGraph,result:ApproachRoute,mode:Rou
 }
 
 data class RoadChoice(val geometry:Long,val way:Long,val name:String,val gap:Double)
-internal fun roadChoices(graph:ApproachGraph,point:GeoPoint,checkpoint:()->Unit={}):List<RoadChoice>{
- val best=mutableListOf<RoadChoice>()
+internal data class RoadReview(val choices:List<RoadChoice>,val withinEstimate:Int,val limited:Boolean)
+internal fun roadChoices(graph:ApproachGraph,point:GeoPoint,checkpoint:()->Unit={}):List<RoadChoice> = roadReview(graph,point,null,checkpoint).choices
+/** Counts overlapping ways before limiting the chooser; distance alone cannot identify a carriageway. */
+internal fun roadReview(graph:ApproachGraph,point:GeoPoint,uncertainty:Float?,checkpoint:()->Unit={}):RoadReview {
+ val best=mutableListOf<RoadChoice>();val nearbyWays=mutableSetOf<Long>();val overlapping=mutableSetOf<Long>()
  for(g in graph.nearby(point)){
   checkpoint();if(g.directions.isEmpty())continue
-  val gap=projectRoad(point,g.points).gap;if(gap>350)continue
+  val gap=projectApproach(point,g).gap;if(gap>350)continue
   val choice=RoadChoice(g.id,g.directions.first().way,g.name,gap)
+  nearbyWays.add(choice.way)
+  if(uncertainty!=null&&uncertainty.isFinite()&&uncertainty>0&&gap<=uncertainty)overlapping.add(choice.way)
   val old=best.firstOrNull{it.way==choice.way}
   if(old!=null&&old.gap<=gap)continue
   best.removeAll{it.way==choice.way};best.add(choice);best.sortWith(compareBy<RoadChoice>{it.gap}.thenBy{it.geometry});if(best.size>20)best.removeAt(best.lastIndex)
  }
- return best
+ return RoadReview(best,overlapping.size,nearbyWays.size>best.size)
 }

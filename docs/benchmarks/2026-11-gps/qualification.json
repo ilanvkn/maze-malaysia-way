@@ -1,0 +1,43 @@
+{
+  "apk_sha256": "8b49eac779fd51fb55a454ac57d3e38a4cab0f95c71a6f1f6c783bc7dc3472b8",
+  "bytes": 63894883,
+  "package": "my.maze.malaysia.qa",
+  "version": "0.4.4-gps-review-qa",
+  "version_code": 10,
+  "jvm_tests": 61,
+  "jvm_failures": 0,
+  "lint": "passed",
+  "qa_assembly": "passed",
+  "signature_verified": true,
+  "glyph_blocks": 256,
+  "country_databases_separate": true,
+  "runtime_platform": {
+    "ro.build.version.sdk": "35",
+    "ro.product.cpu.abi": "arm64-v8a",
+    "ro.build.fingerprint": "google/sdk_gphone64_arm64/emu64a:15/AE3A.240806.043/12960925:userdebug/dev-keys",
+    "dalvik.vm.heapgrowthlimit": "192m"
+  },
+  "native_cases": {
+    "gps": 5,
+    "state": 8,
+    "previews": 40,
+    "fixture": 24,
+    "country": 13
+  },
+  "r3_unchanged": true,
+  "ui": "see ui-qualification.json",
+  "physical_gnss": false,
+  "physical_budget_handset": false,
+  "update_path": [
+    "published 0.4.3 QA / code9",
+    "initial 0.4.4 QA candidate / code10",
+    "final 0.4.4 QA candidate / code10"
+  ],
+  "cleanup": {
+    "owned_qa_removed": true,
+    "stable_lab_unchanged": true,
+    "settings_and_window_restored": true,
+    "test_gps_provider_removed": true,
+    "owned_emulator_stopped": true
+  }
+}
