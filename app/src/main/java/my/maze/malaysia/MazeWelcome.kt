@@ -55,7 +55,7 @@ import androidx.compose.ui.unit.dp
                     Card(Modifier.fillMaxWidth()) {
                         Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             Text("Get the Malaysia pack", style = MaterialTheme.typography.titleLarge)
-                            Text("1  Download the Malaysia ZIP · 662 MB\n2  Choose that ZIP below · keep it zipped\n3  Search, save a trip, try airplane mode")
+                            Text("1  Download the Malaysia ZIP · 699 MB\n2  Choose that ZIP below · keep it zipped\n3  Search, save a trip, try airplane mode")
                             Text("Use Wi-Fi if you prefer. Allow at least 3 GB free while importing. The regional pack also includes Singapore and Brunei.", style = MaterialTheme.typography.bodySmall)
                             state.packError?.let { error ->
                                 Surface(color = colors.errorContainer, shape = MaterialTheme.shapes.medium) {

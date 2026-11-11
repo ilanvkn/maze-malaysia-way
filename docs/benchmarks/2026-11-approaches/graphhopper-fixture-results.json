@@ -1,0 +1,262 @@
+[
+  {
+    "name": "oneway-forward",
+    "expected": "route",
+    "meters": 1110.425,
+    "snaps": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          101.005,
+          3.0
+        ],
+        [
+          101.015,
+          3.0
+        ]
+      ]
+    },
+    "error": null,
+    "ways": [
+      [
+        0,
+        1,
+        10
+      ]
+    ]
+  },
+  {
+    "name": "oneway-reverse",
+    "expected": "no_route",
+    "meters": null,
+    "snaps": null,
+    "error": "Connection between locations not found",
+    "ways": null
+  },
+  {
+    "name": "divided-turnaround",
+    "expected": "route",
+    "meters": 3353.484,
+    "snaps": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          101.005,
+          3.01
+        ],
+        [
+          101.005,
+          3.0102
+        ]
+      ]
+    },
+    "error": null,
+    "ways": [
+      [
+        0,
+        1,
+        20
+      ],
+      [
+        1,
+        2,
+        22
+      ],
+      [
+        2,
+        3,
+        21
+      ]
+    ]
+  },
+  {
+    "name": "divided-forward",
+    "expected": "route",
+    "meters": 1110.415,
+    "snaps": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          101.005,
+          3.01
+        ],
+        [
+          101.015,
+          3.01
+        ]
+      ]
+    },
+    "error": null,
+    "ways": [
+      [
+        0,
+        1,
+        20
+      ]
+    ]
+  },
+  {
+    "name": "median-ambiguous",
+    "expected": "ambiguous",
+    "meters": 1110.415,
+    "snaps": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          101.005,
+          3.01
+        ],
+        [
+          101.015,
+          3.01
+        ]
+      ]
+    },
+    "error": null,
+    "ways": [
+      [
+        0,
+        1,
+        20
+      ]
+    ]
+  },
+  {
+    "name": "barrier-crossing",
+    "expected": "no_route",
+    "meters": null,
+    "snaps": null,
+    "error": "Connection between locations not found",
+    "ways": null
+  },
+  {
+    "name": "no-farther-road-fallback",
+    "expected": "no_route",
+    "meters": null,
+    "snaps": null,
+    "error": "Connection between locations not found",
+    "ways": null
+  },
+  {
+    "name": "restricted-partial-destination",
+    "expected": "route",
+    "meters": 4443.875,
+    "snaps": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          101.005,
+          3.04
+        ],
+        [
+          101.01,
+          3.045
+        ]
+      ]
+    },
+    "error": null,
+    "ways": [
+      [
+        0,
+        1,
+        50
+      ],
+      [
+        1,
+        4,
+        52
+      ],
+      [
+        4,
+        5,
+        51
+      ]
+    ]
+  },
+  {
+    "name": "reverse-oneway-forward",
+    "expected": "route",
+    "meters": 1110.364,
+    "snaps": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          101.015,
+          3.06
+        ],
+        [
+          101.005,
+          3.06
+        ]
+      ]
+    },
+    "error": null,
+    "ways": [
+      [
+        0,
+        1,
+        60
+      ]
+    ]
+  },
+  {
+    "name": "reverse-oneway-illegal",
+    "expected": "no_route",
+    "meters": null,
+    "snaps": null,
+    "error": "Connection between locations not found",
+    "ways": null
+  },
+  {
+    "name": "curved-same-edge",
+    "expected": "route",
+    "meters": 1241.766,
+    "snaps": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          101.005,
+          3.0725
+        ],
+        [
+          101.015,
+          3.0725
+        ]
+      ]
+    },
+    "error": null,
+    "ways": [
+      [
+        0,
+        2,
+        70
+      ]
+    ]
+  },
+  {
+    "name": "curved-same-edge-reverse",
+    "expected": "route",
+    "meters": 1241.766,
+    "snaps": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          101.015,
+          3.0725
+        ],
+        [
+          101.005,
+          3.0725
+        ]
+      ]
+    },
+    "error": null,
+    "ways": [
+      [
+        0,
+        2,
+        70
+      ]
+    ]
+  }
+]

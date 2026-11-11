@@ -129,12 +129,21 @@ class MainActivity:ComponentActivity() {
       Text("${s.provider} · ${timeLabel(s.dataAt ?: s.fetchedAt)}",style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)
       Text("No live traffic · planning preview",style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)
       if(s.routes.size>1)LazyRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){items(s.routes.indices.toList()){i->FilterChip(i==s.selectedRoute,{model.chooseRoute(i)},label={Text("Route ${i+1} · ${routeMinutes(s.routes[i].seconds)} min")})}}
+      TextButton(onClick={model.reviewRoadApproach()},enabled=!s.routeBusy){Text("Change road approach")}
       Row {TextButton(onClick=model::saveTrip,enabled=!s.saving){Text(if(s.saving)"Saving…" else "Save trip")};TextButton(onClick=model::findRoutes,enabled=!s.routeBusy){Text("Refresh route")} }
      } else Text("A clearer way there. Choose your start and destination.",style=MaterialTheme.typography.bodyMedium)
     }
     Button(onClick={if(route==null)model.findRoutes()else sheet="directions"},enabled=!s.routeBusy&&(s.packReady||route!=null),modifier=Modifier.fillMaxWidth().heightIn(min=52.dp).padding(vertical=4.dp),shape=RoundedCornerShape(16.dp)){Text(if(route!=null)"Road sequence" else if(s.routeBusy)"Finding routes…" else "Find route")}
     Text(if(mapReady)"© OpenStreetMap contributors · ODbL 1.0 · Geofabrik" else "Loading basemap · saved directions remain available",style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)
    }
+  }
+ }
+ if(s.roadChoices.isNotEmpty())ModalBottomSheet(onDismissRequest=model::dismissRoadChoices,sheetState=rememberModalBottomSheetState(skipPartiallyExpanded=true)){
+  Column(Modifier.fillMaxWidth().heightIn(max=with(LocalDensity.current){window.height.toDp()}*.85f).verticalScroll(rememberScrollState()).padding(22.dp).padding(bottom=28.dp)){
+   Text(if(s.reviewingOrigin)"Choose your starting road" else "Choose a road approach",style=MaterialTheme.typography.headlineSmall)
+   Text("For ${if(s.reviewingOrigin)s.origin.name else s.destination.name}. These are nearby mapped roads, not verified entrances. Choose the road you intend to approach from. A nearer road may be disconnected; no crossing, parking access or right of entry is confirmed.",Modifier.padding(vertical=12.dp))
+   s.roadChoices.forEach{choice->ListItem(headlineContent={Text(choice.name)},supportingContent={Text("${routeDistanceLabel(choice.gap)} from place · mapped way ${choice.way}")},modifier=Modifier.clickable{model.chooseRoadApproach(choice)})}
+   TextButton(onClick=model::dismissRoadChoices){Text("Keep exploring")}
   }
  }
  if(sheet.isNotEmpty())ModalBottomSheet(onDismissRequest={sheet=""},sheetState=rememberModalBottomSheetState(skipPartiallyExpanded=true)) {

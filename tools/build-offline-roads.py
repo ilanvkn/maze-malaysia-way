@@ -1,5 +1,6 @@
 """Conservative motorcar graph, not a general-purpose navigation engine."""
 from offline_graph_grid import build_grid
+from offline_segment_grid import build_segment_grid
 import osmium,sqlite3,sys,pathlib,json,collections,math,struct,time,hashlib
 source,out,receipt=map(pathlib.Path,sys.argv[1:4]);assert not out.exists();t0=time.monotonic()
 allowed={'motorway':100,'motorway_link':45,'trunk':80,'trunk_link':40,'primary':60,'primary_link':35,'secondary':50,'secondary_link':30,'tertiary':40,'tertiary_link':25,'unclassified':30,'residential':30,'living_street':10,'service':15}
@@ -97,7 +98,7 @@ for v,f in ambiguous:
  restrictions.append((v,f,-1,1,"blocked_ambiguous"))
 counts['ambiguous_only_turn_approaches_blocked']=len(ambiguous)
 db.executemany('INSERT INTO turns VALUES(?,?,?,?,?)',restrictions)
-db.execute('CREATE INDEX turns_via ON turns(via,fromway)');grid=build_grid(db)
-meta={'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'policy':'conservative motorcar; no conditional/dimensional/private/destination/barrier ways; via-way restrictions conservatively block entry approaches; missing entry topology excludes from way; other unsupported restrictions exclude member ways; node-via no/only restrictions retained','limitations':'not active navigation; no lane guidance or traffic; nearest junction snap; defaults estimate time; conservative exclusions can disconnect legitimate roads','counts':dict(counts),'grid':grid,'nodes':db.execute('SELECT count(*) FROM nodes').fetchone()[0],'edges':db.execute('SELECT count(*) FROM edges').fetchone()[0],'turns':len(restrictions)}
+db.execute('CREATE INDEX turns_via ON turns(via,fromway)');grid=build_grid(db);segment_grid=build_segment_grid(db)
+meta={'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'policy':'conservative motorcar; no conditional/dimensional/private/destination/barrier ways; via-way restrictions conservatively block entry approaches; missing entry topology excludes from way; other unsupported restrictions exclude member ways; node-via no/only restrictions retained','limitations':'not active navigation; no lane guidance or traffic; directed segment snap; defaults estimate time; conservative exclusions can disconnect legitimate roads','counts':dict(counts),'grid':grid,'segment_grid':segment_grid,'nodes':db.execute('SELECT count(*) FROM nodes').fetchone()[0],'edges':db.execute('SELECT count(*) FROM edges').fetchone()[0],'turns':len(restrictions)}
 for k,v in meta.items():db.execute('INSERT INTO metadata VALUES(?,?)',(k,json.dumps(v)))
 db.commit();assert db.execute('PRAGMA integrity_check').fetchone()[0]=='ok';db.close();meta.update(seconds=time.monotonic()-t0,bytes=out.stat().st_size,sha256=hashlib.sha256(out.read_bytes()).hexdigest());receipt.write_text(json.dumps(meta,indent=2)+'\n');print(json.dumps(meta,indent=2))
