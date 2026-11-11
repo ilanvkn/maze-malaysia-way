@@ -8,7 +8,7 @@ A shop in your taman. An entrance that is actually usable. A road in Sabah or Sa
 
 **Peta kita. Bina bersama.** Whether you write Kotlin, contribute to OpenStreetMap, test a route, improve Bahasa Melayu copy, or explain what is wrong with a place near you: you're welcome here. Contributors from everywhere are welcome too. No contribution is too local to matter.
 
-[Start contributing](CONTRIBUTING.md) · [Try the preview](https://github.com/ilanvkn/maze-malaysia-way/releases) · [Community discussions](https://github.com/ilanvkn/maze-malaysia-way/discussions) · [Roadmap](ROADMAP.md)
+[Start contributing](CONTRIBUTING.md) · [Try the preview](https://github.com/starkfiber/maze-malaysia-way/releases) · [Community discussions](https://github.com/starkfiber/maze-malaysia-way/discussions) · [Roadmap](ROADMAP.md)
 
 ## What you can use today
 
@@ -30,7 +30,7 @@ Actual 0.4.0 publishable minified lab APK screenshots in airplane mode, not mock
 
 ## Try it
 
-Download the **developer-preview APK**, the matching **Malaysia offline pack ZIP**, and their checksums from the [release page](https://github.com/ilanvkn/maze-malaysia-way/releases). The APK is locally debug-signed for development, non-debuggable, and not a Play Store release. Android 8/API 26 or newer is required. Independent physical-device testing is still needed.
+Download the **developer-preview APK**, the matching **Malaysia offline pack ZIP**, and their checksums from the [release page](https://github.com/starkfiber/maze-malaysia-way/releases). The APK is locally debug-signed for development, non-debuggable, and not a Play Store release. Android 8/API 26 or newer is required. Independent physical-device testing is still needed.
 
 1. Install the APK on your own non-production test device. Maze opens a guided setup screen; no account or GPS permission is needed.
 2. Keep the country ZIP intact. Allow at least 3 GB of free space for the ZIP, installed data and staging; more may be needed while updating.
@@ -69,4 +69,4 @@ Original Maze code is **MIT licensed**. OpenStreetMap and derived databases rema
 
 We are starting with Android and a small maintainer group. There is no paid traffic feed, guaranteed support service or promise that every road is solved. What we can offer is readable code, reproducible reports, honest limitations and a place to build together.
 
-**Jump in: [introduce yourself](https://github.com/ilanvkn/maze-malaysia-way/discussions), [pick a first issue](https://github.com/ilanvkn/maze-malaysia-way/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22), or tell us one thing Maze should do better in your part of Malaysia.**
+**Jump in: [introduce yourself](https://github.com/starkfiber/maze-malaysia-way/discussions), [pick a first issue](https://github.com/starkfiber/maze-malaysia-way/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22), or tell us one thing Maze should do better in your part of Malaysia.**
