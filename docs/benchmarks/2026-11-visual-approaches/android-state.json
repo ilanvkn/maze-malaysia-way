@@ -1,0 +1,18 @@
+{
+  "scope": "state",
+  "routes": [
+    {
+      "check": "5000m estimate requires manual start",
+      "passed": true
+    },
+    {
+      "check": "cancel in-flight road loading stays closed",
+      "passed": true
+    },
+    {
+      "check": "late preview cannot reopen cancelled chooser",
+      "passed": true
+    }
+  ],
+  "passed": true
+}

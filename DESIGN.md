@@ -17,3 +17,11 @@ The regional tiles stop at zoom 14; higher zoom magnifies the existing geometry.
 ## Review gates
 
 Inspect actual day/night map pixels, a visible corrected KL route, first use and the search/details flow. Test portrait and real landscape with enlarged text. Preserve all offline/privacy/error states. Record exact APK/data versions and limits in the qualification report. Emulator screenshots are not a claim of field navigation quality.
+
+## Visual road review · 0.4.3
+
+One map, one selected road. A teal highlight with a contrasting casing follows the actual offline segment for up to 400 m; the separate ROAD ring uses the routing projection, including its endpoint normalization. One-way arrows follow mapped direction; two-way roads have no arrows. Original A/B place markers remain visible and no line bridges their gap to the road. Indigo remains the confirmed route colour.
+
+Previous/next and the numbered All roads list change only the preview. A separate confirmation commits the loaded selection. Loading clears the previous geometry, blocks confirmation and rejects stale asynchronous results. Cancel preserves an existing route. Camera changes are immediate; preview caching holds at most four entries and display geometry at most 2,048 points.
+
+Day/Night, 48 dp controls, source details and attribution are part of this contract. On constrained screens the descriptive body scrolls while confirmation stays accessible. Landscape panels share the width and reserve map space. Provider-reported uncertainty is shown as an estimate, never a promise of the correct carriageway. When uncertainty exceeds the 350 m road-search area, request a known manual start instead.

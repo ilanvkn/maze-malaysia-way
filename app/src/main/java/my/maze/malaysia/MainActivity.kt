@@ -66,7 +66,7 @@ class MainActivity:ComponentActivity() {
         foregroundLocation.request { result ->
             when (result) {
                 is LocationOutcome.Fix -> model?.select(
-                    Place("current", "Current location", result.description, result.point), origin = true
+                    Place("current", "Current location", result.description, result.point), origin = true, accuracyMeters=result.accuracyMeters
                 )
                 is LocationOutcome.Unavailable -> model?.message(result.message)
             }
@@ -83,6 +83,7 @@ class MainActivity:ComponentActivity() {
  val s=model.state;val colors=MaterialTheme.colorScheme
  val gateModel:MazeGateModel=viewModel()
  var sheet by rememberSaveable { mutableStateOf("") };var expanded by remember { mutableStateOf(false) };var explain by remember { mutableStateOf(false) }
+ var renderedApproach by remember{mutableStateOf<ApproachPreview?>(null)}
  var mapReady by remember { mutableStateOf(false) };var header by remember{mutableStateOf(0)};var panel by remember{mutableStateOf(0)};var panelWidth by remember{mutableStateOf(0)}
  val window=LocalWindowInfo.current.containerSize;val wide=window.width>window.height;val compactHeader=wide&&LocalDensity.current.fontScale>=1.5f;val maxPanel=with(LocalDensity.current){window.height.toDp()}*(if(wide).78f else .50f)
  val route=s.routes.getOrNull(s.selectedRoute);val uri=LocalUriHandler.current;val context=LocalContext.current
@@ -92,7 +93,9 @@ class MainActivity:ComponentActivity() {
  val mapStyle=s.localBase+if(night)"/night.json" else "/day.json"
  if(!s.packReady&&route==null)MazeWelcome(s,onDownload={openExternal(MAZE_PACK_DOWNLOAD)},onImport=onImportPack,onCancel=model::cancelPackImport,onSaved={sheet="saved"},onCommunity={sheet="community"},onGatePilot={sheet="gatepilot"})
  else Box(Modifier.fillMaxSize().background(colors.background)) {
-  if(s.packReady)MazeMap(s,Modifier.fillMaxSize(),topInset=header+20,bottomInset=if(wide)40 else panel+20,rightInset=if(wide)panelWidth+20 else 40,styleUri=mapStyle){mapReady=it}
+  val choosing=s.approachReviewActive
+  if(s.packReady)MazeMap(s,Modifier.fillMaxSize(),topInset=header+20,bottomInset=if(wide)40 else panel+20,rightInset=if(wide)panelWidth+20 else 40,styleUri=mapStyle,onApproachApplied={renderedApproach=it}){mapReady=it;if(!it)renderedApproach=null}
+  if(!choosing){
   Surface(Modifier.align(Alignment.TopStart).then(if(wide)Modifier.width(330.dp)else Modifier.fillMaxWidth()).onSizeChanged{header=it.height}.statusBarsPadding().padding(12.dp),shape=RoundedCornerShape(20.dp),shadowElevation=3.dp,color=colors.surfaceContainerLowest) {
    Column(Modifier.padding(horizontal=16.dp,vertical=4.dp)) {
     Row(verticalAlignment=Alignment.CenterVertically) {
@@ -118,11 +121,12 @@ class MainActivity:ComponentActivity() {
      if(!expanded)Text("Road preview · no live traffic",style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)
      routeEndGapLabel(route,s.destination)?.let{Text(it,style=MaterialTheme.typography.bodySmall,color=colors.onSurfaceVariant)}
     }
+    if(s.origin.id=="current")Text(s.origin.area,style=MaterialTheme.typography.bodySmall,color=colors.onSurfaceVariant)
     if(s.routeBusy){LinearProgressIndicator(Modifier.fillMaxWidth().padding(vertical=6.dp));Text("Long offline trips can take up to 45 seconds.",style=MaterialTheme.typography.bodySmall);TextButton(onClick=model::cancelRoute){Text("Cancel route")}}
+    if(s.origin.id=="current"&&needsManualRoadStart(s.originAccuracyMeters))TextButton(onClick={model.query("");sheet="origin"}){Text("Choose start manually")}
     if(s.message!=null)Surface(color=colors.secondaryContainer,shape=RoundedCornerShape(12.dp),modifier=Modifier.padding(vertical=6.dp).semantics{liveRegion=LiveRegionMode.Polite}){Text(s.message,Modifier.padding(12.dp),style=MaterialTheme.typography.bodySmall)}
     if(expanded) {
      FlowRow(horizontalArrangement=Arrangement.spacedBy(4.dp)) {TextButton(onClick={model.query("");sheet="origin"}){Text("Change start")};TextButton(onClick={explain=true}){Text("Locate me")};TextButton(onClick={sheet="offline"}){Text("Map area")} }
-     if(s.origin.id=="current")Text(s.origin.area,style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)
      TextButton(onClick={model.nearbyAccess();sheet="access"},enabled=s.packReady){Text("Nearby entrances & exits")}
      if(route!=null) {
       Text("${s.origin.name} to ${s.destination.name}",style=MaterialTheme.typography.bodyMedium)
@@ -137,14 +141,7 @@ class MainActivity:ComponentActivity() {
     Text(if(mapReady)"© OpenStreetMap contributors · ODbL 1.0 · Geofabrik" else "Loading basemap · saved directions remain available",style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)
    }
   }
- }
- if(s.roadChoices.isNotEmpty())ModalBottomSheet(onDismissRequest=model::dismissRoadChoices,sheetState=rememberModalBottomSheetState(skipPartiallyExpanded=true)){
-  Column(Modifier.fillMaxWidth().heightIn(max=with(LocalDensity.current){window.height.toDp()}*.85f).verticalScroll(rememberScrollState()).padding(22.dp).padding(bottom=28.dp)){
-   Text(if(s.reviewingOrigin)"Choose your starting road" else "Choose a road approach",style=MaterialTheme.typography.headlineSmall)
-   Text("For ${if(s.reviewingOrigin)s.origin.name else s.destination.name}. These are nearby mapped roads, not verified entrances. Choose the road you intend to approach from. A nearer road may be disconnected; no crossing, parking access or right of entry is confirmed.",Modifier.padding(vertical=12.dp))
-   s.roadChoices.forEach{choice->ListItem(headlineContent={Text(choice.name)},supportingContent={Text("${routeDistanceLabel(choice.gap)} from place · mapped way ${choice.way}")},modifier=Modifier.clickable{model.chooseRoadApproach(choice)})}
-   TextButton(onClick=model::dismissRoadChoices){Text("Keep exploring")}
-  }
+  }else MazeRoadChooser(s,wide,with(LocalDensity.current){window.height.toDp()}*(if(wide).88f else .55f),renderedApproach,model::previewRoadApproach,model::confirmRoadApproach,model::dismissRoadChoices,onHeader={header=it},onPanel={h,w->panel=h;panelWidth=w})
  }
  if(sheet.isNotEmpty())ModalBottomSheet(onDismissRequest={sheet=""},sheetState=rememberModalBottomSheetState(skipPartiallyExpanded=true)) {
   Column(Modifier.fillMaxWidth().heightIn(max=with(LocalDensity.current){window.height.toDp()}*.85f).imePadding().verticalScroll(rememberScrollState()).padding(horizontal=22.dp).padding(bottom=28.dp)) {
@@ -152,7 +149,7 @@ class MainActivity:ComponentActivity() {
     "gatepilot"->MazeGatePilot(gateModel,s.packReady){place->model.select(place);sheet=""}
     "search","origin"->{Text(if(sheet=="origin")"Choose your start" else "Find your place",style=MaterialTheme.typography.headlineSmall);OutlinedTextField(s.query,model::query,label={Text("Search Malaysia")},singleLine=true,modifier=Modifier.fillMaxWidth().padding(vertical=12.dp));Text("On-device OSM search · shops, addresses, tagged entrances and motorway exits. Missing results do not mean a place does not exist.",style=MaterialTheme.typography.bodySmall);if(s.searchBusy)LinearProgressIndicator(Modifier.fillMaxWidth());s.results.forEach{p->ListItem(headlineContent={Text(p.name)},supportingContent={Text(placeDetailsLabel(p.area)+" · "+routeDistanceLabel(groundDistance(s.origin.point,p.point))+" from start")},modifier=Modifier.clickable{model.select(p,origin=sheet=="origin");sheet=""})};s.message?.let{Text(it,Modifier.semantics{liveRegion=LiveRegionMode.Polite})}}
     "access"->{TextButton(onClick={sheet="gatepilot"}){Text("Gate pilot")};Text("Mapped access nearby",style=MaterialTheme.typography.headlineSmall);Text("Within 300 m of ${s.accessFor}. Proximity does not establish a connection to this building or legal vehicle access.",Modifier.padding(vertical=12.dp));if(s.accessBusy)LinearProgressIndicator(Modifier.fillMaxWidth());if(s.accessError!=null)Text(s.accessError)else if(!s.accessBusy&&s.accessPoints.isEmpty())Text("No mapped entrances or motorway exits nearby in this extract. This does not mean none exist.");s.accessPoints.forEach{p->ListItem(headlineContent={Text(p.name)},supportingContent={Text(placeDetailsLabel(p.area))},modifier=Modifier.clickable{model.select(p);sheet=""})}}
-    "directions"->{Text("Road sequence",style=MaterialTheme.typography.headlineSmall);Text("Road names in travel order · not turn-by-turn navigation. No live traffic. Access from the snapped junction to the exact place is not verified.",Modifier.padding(vertical=12.dp));route?.steps?.forEach{step->ListItem(headlineContent={Text(step.text)},supportingContent={Text(routeDistanceLabel(step.meters))})}}
+    "directions"->{Text("Road sequence",style=MaterialTheme.typography.headlineSmall);Text("Road names in travel order · not turn-by-turn navigation. No live traffic. Access from the snapped road to the exact place is not verified.",Modifier.padding(vertical=12.dp));route?.steps?.forEach{step->ListItem(headlineContent={Text(step.text)},supportingContent={Text(routeDistanceLabel(step.meters))})}}
     "saved"->{Text("Saved trips",style=MaterialTheme.typography.headlineSmall);Text("Up to four trips, stored only on this device. Saved roads and estimates may be out of date.",Modifier.padding(vertical=12.dp));if(s.savedTrips.isEmpty())Text("No saved trips yet. Find a route, then choose Save trip.");s.savedTrips.forEach{trip->ListItem(headlineContent={Text(trip.destination.name)},supportingContent={Text("From ${trip.origin.name} · saved ${timeLabel(trip.savedAt)}"+(if(trip.sample)" · sample" else ""))},modifier=Modifier.clickable{model.openTrip(trip);sheet=""})};TextButton(onClick=model::clearTrips){Text("Clear saved trips")}}
     "offline"->{Text("Malaysia offline pack",style=MaterialTheme.typography.headlineSmall);Text(s.packStatus,Modifier.padding(vertical=12.dp));if(!s.packReady)Button(onClick=onImportPack,enabled=s.packProgress==null){Text("Choose offline pack")};Text("Maps, search and conservative driving previews run on this device. The regional extract also includes Singapore and Brunei. Shops and entrances are available only where mapped in OpenStreetMap. Building points do not identify a doorway. Motorway exits are tagged junctions, not building exits. Zoom above 14 enlarges existing detail. No live traffic or active navigation.");TextButton(onClick=model::removePack,enabled=s.packProgress==null&&!s.routeBusy){Text(if(s.packReady)"Remove offline pack" else "Clear old map files")};Text("© OpenStreetMap contributors · ODbL 1.0 · Geofabrik Shortbread",Modifier.padding(top=16.dp))}
     "credits"->{Text("Offline map credits",style=MaterialTheme.typography.headlineSmall);Text("© OpenStreetMap contributors · Open Database License 1.0. Regional extracts supplied by Geofabrik, Shortbread schema 1.0. Noto Sans glyphs use the SIL Open Font License 1.1; MapLibre demotiles packaging uses BSD 3-Clause. The regional pack includes Singapore and Brunei. Mapped features can be missing or outdated.",Modifier.padding(vertical=16.dp));Text("Data license: opendatacommons.org/licenses/odbl/1-0/\nAttribution: openstreetmap.org/copyright") }

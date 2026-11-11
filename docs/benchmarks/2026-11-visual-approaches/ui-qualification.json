@@ -1,0 +1,53 @@
+{
+  "flows": {
+    "same_apk": "apk-identity-publish.json",
+    "preview_does_not_confirm": true,
+    "rapid_selection_ends_at_option6": true,
+    "all_roads_and_same_names": true,
+    "two_way_preview": true,
+    "cancel_before_route": true,
+    "explicit_start_and_arrival": true,
+    "kl_label": "6.3 km",
+    "cancel_edit_keeps_route": true,
+    "day": true,
+    "night": true,
+    "remaining": "Actual map pixels need independent viewing; constrained viewport/GPS checks separate"
+  },
+  "constrained": {
+    "portrait": {
+      "size": [
+        360,
+        640
+      ],
+      "font_scale": "2.0",
+      "controls_inside_viewport": true
+    },
+    "landscape": {
+      "size": [
+        640,
+        360
+      ],
+      "font_scale": "2.0",
+      "controls_inside_viewport": true
+    }
+  },
+  "simulated_location": {
+    "provider": "Android test gps",
+    "reported_accuracy_m": 250,
+    "mock_label_visible": true,
+    "uncertainty_and_start_preview_visible": true,
+    "field_GNSS_test": false
+  },
+  "apk_sha256": "18d4a662e173ad94975a5f461b19b9e9ab9f7017d18806df2549c187dd0d432b",
+  "pixel_review": [
+    "day one-way arrows and separate marker",
+    "two-way bend without arrows",
+    "night arrival",
+    "small portrait and landscape",
+    "simulated 250m uncertainty ring"
+  ],
+  "limits": [
+    "200% text / 640x360 landscape wraps and truncates the place header; map and controls remain available",
+    "No full screen-reader or physical low-end hardware qualification"
+  ]
+}
